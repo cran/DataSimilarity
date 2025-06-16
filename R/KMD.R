@@ -3,11 +3,13 @@
 ##                                                                            ##
 ################################################################################
 KMD <- function(X1, X2, ..., n.perm = 0, graph = "knn", k = ceiling(N/10), 
-                kernel = "discrete", seed = 42) {
+                kernel = "discrete", seed = NULL) {
   if(!requireNamespace("KMD", quietly = TRUE)) {
     stop("Package \"KMD\" required for using method KMD().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   graph <- match.arg(graph, c("knn", "mst"))
   data.list <- c(list(X1, X2), list(...))
   if(any(!sapply(data.list, function(x) 

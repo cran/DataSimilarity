@@ -3,11 +3,13 @@
 ##                                                                            ##
 ################################################################################
 Rosenbaum <- function(X1, X2, exact = FALSE, dist.fun = stats::dist, 
-                      dist.args = NULL, seed = 42) {
+                      dist.args = NULL, seed = NULL) {
   if(!requireNamespace("crossmatch", quietly = TRUE)) {
     stop("Package \"crossmatch\" required for using method Rosenbaum().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")
   }

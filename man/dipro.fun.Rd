@@ -51,6 +51,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{DiProPerm}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

@@ -8,8 +8,8 @@ Classifier Two-Sample Test
 The function implements the Classifier Two-Sample Test (C2ST) of \cite{Lopez-Paz & Oquab (2017)}. The comparison of multiple (\eqn{\ge 2}) samples is also possible. The implementation here uses the \code{\link[Ecume:classifier_test]{classifier_test}} implementation from the \pkg{Ecume} package. 
 }
 \usage{
-C2ST(X1, X2, ..., split = 0.7, thresh = 0, method = "knn", control = NULL, 
-      train.args = NULL, seed = 42)
+C2ST(X1, X2, ..., split = 0.7, thresh = 0, classifier = "knn", control = NULL, 
+      train.args = NULL, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -27,7 +27,7 @@ Proportion of observations used for training
   \item{thresh}{
 Value to add to the null hypothesis value (default:0). The null hypothesis tested can be formulated as \eqn{H_0: t = p_0 + } \code{thresh}, where \eqn{t} denotes the test accuracy of the classifier and \eqn{p_0} is the chance level (proportion of largest dataset in pooled sample).
 }
-  \item{method}{
+  \item{classifier}{
 Classifier to use during training (default: \code{"knn"}). See details for possible options. 
 }
   \item{control}{
@@ -37,7 +37,7 @@ Control parameters for fitting. See \code{\link[caret:trainControl]{trainControl
 Further arguments passed to \code{\link[caret:train]{train}} as a named list.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -77,6 +77,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{HMN}}, \code{\link{YMRZL}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

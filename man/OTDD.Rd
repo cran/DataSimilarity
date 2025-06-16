@@ -13,7 +13,7 @@ OTDD(X1, X2, target1 = "y", target2 = "y", method = "precomputed.labeldist",
       feature.cost = stats::dist, lambda.x = 1, lambda.y = 1, p = 2, ground.p = 2,
       sinkhorn = FALSE, debias = FALSE, inner.ot.method = "exact", inner.ot.p = 2, 
       inner.ot.ground.p = 2, inner.ot.sinkhorn = FALSE, inner.ot.debias = FALSE,
-      seed = 42)
+      seed = NULL)
 hammingDist(x) 
 }
 
@@ -67,7 +67,7 @@ Should the Sinkhorn approximation be used for solving the inner optimal transpor
 Should debiased estimator be used when using Sinkhorn approximation for inner optimal transport problem? (default: \code{FALSE}). Used only if \code{method = "precomputed.labeldist"} and \code{inner.ot.method = "exact"}.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
   \item{x}{
 Dataset for which the distance matrix of pairwise Hamming distances is calculated.
@@ -126,6 +126,7 @@ Especially for large numbers of variables and low numbers of observations, it ca
 }
 
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

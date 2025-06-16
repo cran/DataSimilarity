@@ -2,7 +2,7 @@
 ##                            Deb and Sen (2021)                              ##
 ##                                                                            ##
 ################################################################################
-DS <- function(X1, X2, n.perm = 0, rand.gen = NULL, seed = 42) {
+DS <- function(X1, X2, n.perm = 0, rand.gen = NULL, seed = NULL) {
   if(!requireNamespace("randtoolbox", quietly = TRUE) | 
      !requireNamespace("clue", quietly = TRUE)) {
     stop("Packages \"randtoolbox\" and \"clue\" required for using method DS().")
@@ -10,7 +10,9 @@ DS <- function(X1, X2, n.perm = 0, rand.gen = NULL, seed = 42) {
   if(is.null(rand.gen)) {
     rand.gen <- randtoolbox::halton
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")
   }

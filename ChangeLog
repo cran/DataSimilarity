@@ -1,0 +1,37 @@
+2025-05-21 Marieke Stolte <stolte@statistik.tu-dortmund.de> 
+
+  Addition / Updates vignettes
+  
+  * GettingStarted vignette describes workflow of using package for finding a 
+    method using findSimilarityMethod() and applying it using DataSimilarity()
+  * Renamed overall vignette to "Details" for clarity
+  * Details vignette is updated accordingly
+  * Switched package for neural nets used in C2ST() due to reproducibility issues
+    of the RSNNS package when using Windows compared to Linux
+
+2025-05-21 Marieke Stolte <stolte@statistik.tu-dortmund.de> 
+
+  Introduction of DataSimilarity and findSimilarityMethod functions
+  
+  * Added new functions
+  * Renamed "method" argument in NKT() to "version"
+  * Renamed "method" argmuent in C2ST() to "classifier"
+  * Renamed "method" argmuent in Jeffreys() to "fitting.method"
+  
+2025-05-21 Marieke Stolte <stolte@statistik.tu-dortmund.de> and Luca Sauer
+  
+  Changed default behavior for seed argument
+  
+  * Default is set to seed = NULL
+  * Seed is only set by each function if !is.null(seed)
+  
+2025-04-15 Marieke Stolte <stolte@statistik.tu-dortmund.de>
+  
+  Improved numeric stability of CMDistance function
+  
+  * Rewrote expression to circumvent direct matrix inversion
+  
+2025-04-15 Marieke Stolte <stolte@statistik.tu-dortmund.de>
+  
+  Fixed typos / inaccuracies in the package documentation
+  

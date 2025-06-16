@@ -2,14 +2,14 @@
 \name{Bahr}
 \alias{Bahr}
 \title{
-Bahr (1996) multivariate two-sample test
+Bahr (1996) Multivariate Two-sample Test
 }
 \description{
 The function implements the \cite{Bahr (1996)} multivariate two-sample test. This test is a special case of the rigid-motion invariant multivariate two-sample test of \cite{Baringhaus and Franz (2010)}. The implementation here uses the \code{\link[cramer]{cramer.test}} implementation from the \pkg{cramer} package.
 }
 \usage{
 Bahr(X1, X2, n.perm = 0, just.statistic = n.perm <= 0, 
-      sim = "ordinary", maxM = 2^14, K = 160, seed = 42)
+      sim = "ordinary", maxM = 2^14, K = 160, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -34,7 +34,7 @@ Maximum number of points used for fast Fourier transform involved in eigenvalue 
 Upper value up to which the integral for calculating the distribution function from the characteristic function is evaluated (default: 160). Note: when \code{K} is increased, it is necessary to also increase \code{maxM}. Ignored if sim is either \code{"ordinary"} or \code{"permutation"}. For more details see \code{\link[cramer:cramer.test]{cramer.test}}.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -83,6 +83,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{BF}}, \code{\link{Cramer}}, \code{\link{Energy}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

@@ -36,11 +36,13 @@ OTDD <- function(X1, X2, target1 = "y", target2 = "y", method = "precomputed.lab
                  p = 2, ground.p = 2, sinkhorn = FALSE, debias = FALSE,
                  inner.ot.method = "exact", inner.ot.p = 2, inner.ot.ground.p = 2, 
                  inner.ot.sinkhorn = FALSE,  inner.ot.debias = FALSE,
-                 seed = 42) {
+                 seed = NULL) {
   if(!requireNamespace("approxOT", quietly = TRUE) & !requireNamespace("expm", quietly = TRUE)) {
     stop("Packages \"approxOT\" and \"expm\" required for using method OTDD().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   dname <- c(deparse1(substitute(X1)), deparse1(substitute(X2)))
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")

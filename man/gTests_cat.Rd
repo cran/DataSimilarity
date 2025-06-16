@@ -9,7 +9,7 @@ Performs the edge-count two-sample tests for multivariate categorical data imple
 }
 \usage{
 gTests_cat(X1, X2, dist.fun = function(x, y) sum(x != y), graph.type = "mstree", 
-            K = 1, n.perm = 0, maxtype.kappa = 1.14, seed = 42)
+            K = 1, n.perm = 0, maxtype.kappa = 1.14, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -19,7 +19,7 @@ First dataset as matrix or data.frame
 Second dataset as matrix or data.frame
 }
   \item{dist.fun}{
-Function for calculating a distance matrix on the pooled dataset (default: Number of unequal components).
+Function for calculating the distance of two observations. Should take two vectors as its input and return their distance as a scalar value (default: Number of unequal components).
 }
   \item{graph.type}{
 Character specifying which similarity graph to use. Possible options are \code{"mstree"} (default, Minimum Spanning Tree) and \code{"nnlink"} (Nearest Neighbor Graph).
@@ -34,7 +34,7 @@ Number of permutations for permutation test (default: 0, asymptotic test is perf
 Parameter \eqn{\kappa} of the maxtype test (default: 1.14). See \code{\link{ZC}}.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -79,6 +79,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{gTests}}, \code{\link{FR}}, \code{\link{CF}}, \code{\link{CCS}}, and \code{\link{ZC}} for versions of the test for continuous data
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1cat <- matrix(sample(1:4, 300, replace = TRUE), ncol = 3)
 X2cat <- matrix(sample(1:4, 300, replace = TRUE, prob = 1:4), ncol = 3)

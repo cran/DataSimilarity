@@ -2,8 +2,10 @@
 ##                            BISWAS & GHOSH (2014)                           ##
 ##                                                                            ##
 ################################################################################
-BG2 <- function(X1, X2, n.perm = 0, seed = 42) {
-  set.seed(seed)
+BG2 <- function(X1, X2, n.perm = 0, seed = NULL) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   dname <- c(deparse1(substitute(X1)), deparse1(substitute(X2)))
   n1 <- nrow(X1)
   n2 <- nrow(X2)

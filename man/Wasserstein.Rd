@@ -2,14 +2,14 @@
 \alias{Wasserstein}
 \encoding{UTF-8}
 \title{
-Wasserstein Distance based Test
+Wasserstein Distance Based Test
 }
 \description{
-Performs a permutation two-sample test based on the Wasserstein distance.  The implementation here uses the \code{\link[Ecume]{wasserstein_permut}} implementation from the \pkg{Ecume} package.
+Performs a permutation two-sample test based on the Wasserstein distance. The implementation here uses the \code{\link[Ecume]{wasserstein_permut}} implementation from the \pkg{Ecume} package.
 }
 \usage{
 Wasserstein(X1, X2, n.perm = 0, fast = (nrow(X1) + nrow(X2)) > 1000, 
-            S = max(1000, (nrow(X1) + nrow(X2))/2), seed = 42, ...)
+            S = max(1000, (nrow(X1) + nrow(X2))/2), seed = NULL, ...)
 }
 \arguments{
   \item{X1}{
@@ -28,7 +28,7 @@ Should the \code{\link[transport]{subwasserstein}} approximate function be used?
 Number of samples to use for approximation if \code{fast = TRUE}. See \code{\link[transport]{subwasserstein}}
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
   \item{\dots}{
 Other parameters passed to \code{\link[transport]{wasserstein}} or \code{\link[transport]{wasserstein1d}}, e.g. the power \eqn{p\ge 1}
@@ -68,6 +68,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 }
 
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

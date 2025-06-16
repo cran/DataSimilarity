@@ -9,7 +9,7 @@ Performs the weighted edge-count two-sample test for multivariate data proposed 
 }
 \usage{
 CCS(X1, X2, dist.fun = stats::dist, graph.fun = MST, n.perm = 0, 
-    dist.args = NULL, graph.args = NULL, seed = 42)
+    dist.args = NULL, graph.args = NULL, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -34,7 +34,7 @@ Named list of further arguments passed to \code{dist.fun} (default: \code{NULL})
 Named list of further arguments passed to \code{graph.fun} (default: \code{NULL}).
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -77,12 +77,16 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{CCS_cat}}, \code{\link{FR_cat}}, \code{\link{CF_cat}}, \code{\link{ZC_cat}}, and \code{\link{gTests_cat}} for versions of the test for categorical data
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)
 # Perform weighted edge-count test
 if(requireNamespace("gTests", quietly = TRUE)) {
+  # Using MST
   CCS(X1, X2)
+  # Using 5-MST
+  CCS(X1, X2, graph.args = list(K = 5))
 }
 }
 \keyword{ htest }

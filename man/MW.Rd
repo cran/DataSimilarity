@@ -11,7 +11,7 @@ Performs the nonparametric graph-based LP (GLP) multisample test proposed by \ci
 \usage{
 MW(X1, X2, ..., sum.all = FALSE, m.max = 4, components = NULL, alpha = 0.05, 
     c.poly = 0.5, clust.alg = "kmeans", n.perm = 0, combine.criterion = "kernel", 
-    multiple.comparison = TRUE, compress.algorithm = FALSE, nbasis = 8, seed = 42)
+    multiple.comparison = TRUE, compress.algorithm = FALSE, nbasis = 8, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -57,7 +57,7 @@ Should smooth compression of Laplacian spectra be used for testing? (default: \c
 Number of bases used for approximation when \code{compress.algorithm = TRUE} (default: 8)
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -98,6 +98,7 @@ Note that the implementation cannot handle univariate data.
 }
 
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

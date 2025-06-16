@@ -9,7 +9,7 @@ Performs the graph-based multi-sample test for high-dimensional data proposed by
 }
 \usage{
 SC(X1, X2, ..., n.perm = 0, dist.fun = stats::dist, graph.fun = MST, 
-    dist.args = NULL, graph.args = NULL, type = "S", seed = 42)
+    dist.args = NULL, graph.args = NULL, type = "S", seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -40,7 +40,7 @@ Named list of further arguments passed to \code{graph.fun} (default: \code{NULL}
 Character specifying the test statistic to use. Possible options are \code{"S"} (default) and \code{"SA"}. See details.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -82,6 +82,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{gTestsMulti}} for performing both tests at once, \code{\link{MST}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

@@ -3,11 +3,13 @@
 ##                                                                            ##
 ################################################################################
 Wasserstein <- function(X1, X2, n.perm = 0, fast = (nrow(X1) + nrow(X2)) > 1000, 
-                        S = max(1000, (nrow(X1) + nrow(X2)) / 2), seed = 42, ...) {
+                        S = max(1000, (nrow(X1) + nrow(X2)) / 2), seed = NULL, ...) {
   if(!requireNamespace("Ecume", quietly = TRUE)) {
     stop("Package \"Ecume\" required for using method Wasserstein().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")
   }

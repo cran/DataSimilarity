@@ -2,8 +2,10 @@
 ##                      CONSTRAINED MINIMUM DISTANCE                          ##
 ##                                                                            ##
 ################################################################################
-CMDistanceBinary <- function(X1, X2, cov = FALSE, seed = 42) {
-  set.seed(seed)
+CMDistanceBinary <- function(X1, X2, cov = FALSE, seed = NULL) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   dname <- c(deparse1(substitute(X1)), deparse1(substitute(X2)))
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")
@@ -47,8 +49,8 @@ CMDistanceBinary <- function(X1, X2, cov = FALSE, seed = 42) {
 calc.cov.S <- function(Omega, S.fun) {
   S.Omega <- apply(Omega, 1, S.fun)
   if(is.null(dim(S.Omega))) S.Omega <- t(S.Omega)
-  cov.S <- 1 / nrow(Omega) * Reduce('+', apply(S.Omega, 2, function(x) x %*% t(x), simplify = FALSE))
-  cov.S <- drop(cov.S - rowMeans(S.Omega) %*% t(rowMeans(S.Omega)))
+  cov.S <- 1 / nrow(Omega) * Reduce('+', apply(S.Omega, 2, tcrossprod, simplify = FALSE))
+  cov.S <- drop(cov.S - tcrossprod(rowMeans(S.Omega)))
   return(cov.S)
 }
 
@@ -64,8 +66,10 @@ calc.Omega <- function(X1, X2) {
 
 CMDistance <- function(X1, X2, binary = NULL, cov = FALSE,
                        S.fun = function(x) as.numeric(as.character(x)), 
-                       cov.S = NULL, Omega = NULL, seed = 42) {
-  set.seed(seed)
+                       cov.S = NULL, Omega = NULL, seed = NULL) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   dname <- c(deparse1(substitute(X1)), deparse1(substitute(X2)))
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")
@@ -95,7 +99,18 @@ CMDistance <- function(X1, X2, binary = NULL, cov = FALSE,
   if(is.null(cov.S)) {
     cov.S <- calc.cov.S(Omega, S.fun)
   }
-  d.CM <- sqrt(drop(t(theta.1 - theta.2) %*% solve(cov.S) %*% (theta.1 - theta.2)))
+  
+  # use cholesky decomposition cov.S = R^TR to calculate 
+  # d.CM^2 = (theta.1 - theta.2)^T * cov.S^{-1} * (theta.1 - theta.2)
+  #        = (theta.1 - theta.2)^T  * R^{-1} * (R^{-1})^T * (theta.1 - theta.2)
+  #        = ((R^{-1})^T * (theta.1 - theta.2))^T * ((R^{-1})^T * (theta.1 - theta.2))
+  #        = x^T * x, where x = (R^{-1})^T * (theta.1 - theta.2)
+  # since cov.S is spd matrix
+  R <- chol(cov.S)
+  # backsolve x = (R^{-1})^T * (theta.1 - theta.2) <=> R^T * x = theta.1 - theta.2
+  x <- backsolve(R, theta.1 - theta.2, transpose = TRUE)
+  d.CM <- sqrt(crossprod(x))
+  
   names(d.CM) <- "CMD"
   res <- list(statistic = d.CM, p.value = NULL, estimate = NULL, 
               alternative = paste0("The distributions of ", paste0(dname, collapse = " and "),

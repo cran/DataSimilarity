@@ -2,7 +2,7 @@
 \alias{LHZStatistic}
 \encoding{UTF-8}
 \title{
-Calculation of the Li et al. (2022) empirical characteristic distance
+Calculation of the Li et al. (2022) Empirical Characteristic Distance
 }
 \description{
 The function calculates the \cite{Li et al. (2022)} empirical characteristic distance
@@ -33,6 +33,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{LHZ}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

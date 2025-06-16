@@ -1,11 +1,15 @@
 export("AUC", "Bahr", "BallDivergence", "BF", "BG", "BG2", "BMG", "BQS", "C2ST", 
        "CCS", "CCS_cat", "CF", "CF_cat", "CMDistance", 
-       "Cramer", "DiProPerm", "DISCOB", "DISCOF", "DS", "dwdProj", "Energy", "engineerMetric",
-       "f.a", "f.s", "f.aCat", "f.sCat", "findSigma", "FR", "FStest", "FR_cat", "GGRL", "GGRLCat", "GPK", "gTests", 
-       "gTests_cat", "gTestsMulti", "HamiltonPath", "hammingDist", "HMN", "Jeffreys", "kerTests",
-       "KMD", "knn", "knn.bf", "knn.fast", "LHZ", "LHZStatistic", "MD", "MMCM", "MMD", "MST", "MW", "NKT", "OTDD", "Petrie",
-       "rectPartition", "RItest", "Rosenbaum", "SC", "SH", "svmProj", "tStat", "Wasserstein", "YMRZL", "ZC",
-       "ZC_cat")
+       "Cramer", "DataSimilarity", "DiProPerm", "DISCOB", "DISCOF", "DS",
+       "dwdProj", "Energy", "engineerMetric",
+       "f.a", "f.s", "f.aCat", "f.sCat", "findSimilarityMethod", "findSigma", 
+       "FR", "FStest", "FR_cat", "GGRL", "GGRLCat", "GPK", "gTests", 
+       "gTests_cat", "gTestsMulti", "HamiltonPath", "hammingDist", "HMN", 
+       "Jeffreys", "kerTests",
+       "KMD", "knn", "knn.bf", "knn.fast", "LHZ", "LHZStatistic", "MD", 
+       "MMCM", "MMD", "MST", "MW", "NKT", "OTDD", "Petrie",
+       "rectPartition", "RItest", "Rosenbaum", "SC", "SH", "svmProj", "tStat", 
+       "Wasserstein", "YMRZL", "ZC", "ZC_cat")
 
 importFrom("stats", "dist", "pchisq", "pnorm", "var", "cov", "t.test")
 importFrom("boot", "boot")

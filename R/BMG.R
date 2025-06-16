@@ -2,8 +2,10 @@
 ##                            Biswas et al. (2014)                            ##
 ##                                                                            ##
 ################################################################################
-BMG <- function(X1, X2, seed = 42, asymptotic = TRUE) {
-  set.seed(seed)
+BMG <- function(X1, X2, seed = NULL, asymptotic = TRUE) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   dname <- c(deparse1(substitute(X1)), deparse1(substitute(X2)))
   if(ncol(X1) != ncol(X2)) {
     stop("All datasets must have the same number of variables.")

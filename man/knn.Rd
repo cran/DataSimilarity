@@ -38,16 +38,25 @@ Thus, the second entry of each row is one of the K nearest neighbors of the firs
 \code{\link{SH}}
 }
 \examples{
+set.seed(1234)
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)
 dists <- stats::dist(rbind(X1, X2))
 # Nearest neighbor graph
-knn(dists)
-knn.fast(dists)
+if(requireNamespace("dbscan", quietly = TRUE)) {
+  knn(dists)
+}
+if(requireNamespace("FNN", quietly = TRUE)) {
+  knn.fast(dists)
+}
 knn.bf(dists)
 # 5-Nearest neighbor graph
-knn(dists, K = 5)
-knn.fast(dists, K = 5)
+if(requireNamespace("dbscan", quietly = TRUE)) {
+  knn(dists, K = 5)
+}
+if(requireNamespace("FNN", quietly = TRUE)) {
+  knn.fast(dists, K = 5)
+}
 knn.bf(dists, K = 5)
 }
 \keyword{ numeric }

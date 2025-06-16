@@ -4,11 +4,13 @@
 ################################################################################
 FStest <- function(X1, X2, ..., n.clust, randomization = TRUE, version = "original", 
                    mult.test = "Holm", kmax = 2 * n.clust, s.psi = 1, s.h = 1,
-                   lb = 1, n.perm =  1 / alpha, alpha = 0.05, seed = 42) {
+                   lb = 1, n.perm =  1 / alpha, alpha = 0.05, seed = NULL) {
   if(!requireNamespace("HDLSSkST", quietly = TRUE)) {
     stop("Package \"HDLSSkST\" required for using method FStest().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   data.list <- c(list(X1, X2), list(...))
   if(any(!sapply(data.list, function(x) inherits(x, "matrix") | inherits(x, "data.frame")))) {
     stop("All datasets must be provided as data.frames or matrices.")

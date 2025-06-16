@@ -10,7 +10,7 @@ Performs the (modified/ multiscale/ aggregated) FS test (\cite{Paul et al., 2021
 \usage{
 FStest(X1, X2, ..., n.clust, randomization = TRUE, version = "original", 
         mult.test = "Holm", kmax = 2 * n.clust, s.psi = 1, s.h = 1, 
-        lb = 1, n.perm = 1/alpha, alpha = 0.05, seed = 42)
+        lb = 1, n.perm = 1/alpha, alpha = 0.05, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -60,7 +60,7 @@ Number of simulations of the test statistic (default: 1/alpha, minimum number re
 Test level (default: 0.05).
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -132,6 +132,7 @@ Note that the aggregated test cannot handle univariate data.
 \code{\link{RItest}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

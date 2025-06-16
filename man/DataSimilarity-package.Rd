@@ -1,6 +1,5 @@
 \name{DataSimilarity-package}
 \alias{DataSimilarity-package}
-\alias{DataSimilarity}
 \encoding{UTF-8}
 \docType{package}
 \title{

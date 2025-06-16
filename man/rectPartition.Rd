@@ -2,7 +2,7 @@
 \alias{rectPartition}
 \encoding{UTF-8}
 \title{
-Calculate a rectangular partition
+Calculate a Rectangular Partition
 }
 \description{
 The function calculates a rectangular partition of the subspace spanned by the data. Used for \code{\link{BG}}.
@@ -12,10 +12,10 @@ rectPartition(X1, X2, n, p, exponent = 0.8, eps = 0.01)
 }
 \arguments{
   \item{X1}{
-First data set as matrix 
+First dataset as matrix 
 }
   \item{X2}{
-Second data set as matrix
+Second dataset as matrix
 }
   \item{n}{
 Number of rows in the data
@@ -49,6 +49,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{BG}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 5)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 5)

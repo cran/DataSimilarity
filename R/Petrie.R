@@ -2,8 +2,10 @@
 ##                                Petrie (2016)                               ##
 ##                                                                            ##
 ################################################################################
-Petrie <- function(X1, X2, ..., dist.fun = stats::dist, dist.args = NULL, seed = 42) {
-  set.seed(seed)
+Petrie <- function(X1, X2, ..., dist.fun = stats::dist, dist.args = NULL, seed = NULL) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   data.list <- c(list(X1, X2), list(...))
   if(any(!sapply(data.list, function(x) inherits(x, "matrix") | inherits(x, "data.frame")))) {
     stop("All datasets must be provided as data.frames or matrices.")

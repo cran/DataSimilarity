@@ -3,11 +3,13 @@
 ##                                                                            ##
 ################################################################################
 MMD <- function(X1, X2, n.perm = 0, alpha = 0.05, asymptotic = FALSE, replace = TRUE, 
-                n.times = 150, frac = 1, seed = 42, ...) {
+                n.times = 150, frac = 1, seed = NULL, ...) {
   if(!requireNamespace("kernlab", quietly = TRUE)) {
     stop("Package \"kernlab\" required for using method MMD().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   dname <- c(deparse1(substitute(X1)), deparse1(substitute(X2)))
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")

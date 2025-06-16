@@ -9,7 +9,7 @@ Performs Two-Sample Cramér Test (\cite{Baringhaus and Franz, 2004}). The implem
 }
 \usage{
 Cramer(X1, X2, n.perm = 0, just.statistic = (n.perm <= 0), sim = "ordinary", 
-        maxM = 2^14, K = 160, seed = 42)
+        maxM = 2^14, K = 160, seed = NULL)
 }
 \arguments{
  \item{X1}{
@@ -34,7 +34,7 @@ Maximum number of points used for fast Fourier transform involved in eigenvalue 
 Upper value up to which the integral for calculating the distribution function from the characteristic function is evaluated (default: 160). Note: when \code{K} is increased, it is necessary to also increase \code{maxM}. Ignored if sim is either \code{"ordinary"} or \code{"permutation"}. For more details see \code{\link[cramer:cramer.test]{cramer.test}}.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -86,6 +86,7 @@ The Cramér test (\cite{Baringhaus and Franz, 2004}) is equivalent to the test b
 }
 
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

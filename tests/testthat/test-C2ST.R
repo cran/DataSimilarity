@@ -1,4 +1,4 @@
-testC2ST <- function(n.iter, method = "knn") {
+testC2ST <- function(n.iter, classifier = "knn") {
   if(requireNamespace("Ecume", quietly = TRUE)) {
     for(i in 1:n.iter) {
       set.seed(i)
@@ -17,9 +17,9 @@ testC2ST <- function(n.iter, method = "knn") {
       
       set.seed(i)
       res.classifier_test <- Ecume::classifier_test(list(X1, X2, X3, X4, X5, X6),
-                                                    method = method)
+                                                    method = classifier)
       res.C2ST <- DataSimilarity::C2ST(X1, as.data.frame(X2), X3, X4, X5, X6, 
-                                       method = method, seed = i)
+                                       classifier = classifier, seed = i)
       
       testthat::test_that("output type", {
         # check length and names of output
@@ -50,7 +50,7 @@ testC2ST <- function(n.iter, method = "knn") {
                                          as.data.frame(X2)[, 1, drop = FALSE],
                                          X3[, 1, drop = FALSE], X4[, 1, drop = FALSE], 
                                          X5[, 1, drop = FALSE], X6[, 1, drop = FALSE], 
-                                         method = method, seed = i)
+                                         classifier = classifier, seed = i)
       
       testthat::test_that("output type", {
         # check length and names of output

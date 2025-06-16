@@ -3,7 +3,7 @@
 ##                                                                            ##
 ################################################################################
 HMN <- function(X1, X2, n.perm = 0, statistic = "PerClassOOB", normal.approx = FALSE, 
-                seed = 42, ...) {
+                seed = NULL, ...) {
   if(!requireNamespace("hypoRF", quietly = TRUE)) {
     stop("Package \"hypoRF\" required for using method HMN().")
   }

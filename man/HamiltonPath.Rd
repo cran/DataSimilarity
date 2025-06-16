@@ -8,7 +8,7 @@ Shortest Hamilton path
 The function implements a heuristic approach to determine the shortest Hamilton path of a graph based on Kruskal's algorithm.
 }
 \usage{
-HamiltonPath(X1, X2, seed = 42)
+HamiltonPath(X1, X2, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -18,7 +18,7 @@ First dataset as matrix
 Second dataset as matrix
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{

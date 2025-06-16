@@ -3,11 +3,13 @@
 ##                                                                            ##
 ################################################################################
 kerTests <- function(X1, X2, n.perm = 0, sigma = findSigma(X1, X2), 
-                     r1 = 1.2, r2 = 0.8, seed = 42) {
+                     r1 = 1.2, r2 = 0.8, seed = NULL) {
   if(!requireNamespace("kerTests", quietly = TRUE)) {
     stop("Package \"kerTests\" required for using method kerTests().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")
   }

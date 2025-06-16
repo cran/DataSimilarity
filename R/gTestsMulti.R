@@ -3,11 +3,13 @@
 ##                                                                            ##
 ################################################################################
 gTestsMulti <- function(X1, X2, ..., n.perm = 0, dist.fun = stats::dist, graph.fun = MST, 
-                        dist.args = NULL, graph.args = NULL, seed = 42) {
+                        dist.args = NULL, graph.args = NULL, seed = NULL) {
   if(!requireNamespace("gTestsMulti", quietly = TRUE)) {
     stop("Package \"gTestsMulti\" required for using method gTestsMulti().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   data.list <- c(list(X1, X2), list(...))
   if(any(!sapply(data.list, function(x) inherits(x, "matrix") | inherits(x, "data.frame")))) {
     stop("All datasets must be provided as data.frames or matrices.")

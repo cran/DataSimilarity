@@ -10,7 +10,7 @@ Performs the edge-count two-sample tests for multivariate data implementated in 
 \usage{
 gTests(X1, X2, dist.fun = stats::dist, graph.fun = MST, 
         n.perm = 0, dist.args = NULL, graph.args = NULL,
-        maxtype.kappa = 1.14,  seed = 42)
+        maxtype.kappa = 1.14,  seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -38,7 +38,7 @@ Named list of further arguments passed to \code{graph.fun}.
 Parameter \eqn{\kappa} of the maxtype test (default: 1.14). See \code{\link{ZC}}.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -83,6 +83,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{gTests_cat}}, \code{\link{CCS_cat}}, \code{\link{FR_cat}}, \code{\link{CF_cat}}, and \code{\link{ZC_cat}} for versions of the tests for categorical data
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

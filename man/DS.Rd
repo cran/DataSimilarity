@@ -5,10 +5,10 @@
 Rank-Based Energy Test (Deb and Sen, 2021)
 }
 \description{
-Performs the multivariate rank-based multivariate two-sample test using measure transportation by \cite{Deb and Sen (2021)}. 
+Performs the multivariate rank-based two-sample test using measure transportation by \cite{Deb and Sen (2021)}. 
 }
 \usage{
-DS(X1, X2, n.perm = 0, rand.gen = NULL, seed = 42)
+DS(X1, X2, n.perm = 0, rand.gen = NULL, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -24,7 +24,7 @@ Number of permutations for permuation test (default: 0, no permutation test perf
 Function that generates a grid of (random) numbers in \eqn{(0,1)} of dimension \eqn{n \times k} (\eqn{n} and \eqn{k} are inputs of this function). Default is \code{NULL} in which case, \code{\link[randtoolbox:halton]{randtoolbox::halton}} is used.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -66,6 +66,7 @@ The implementation is a modification of the code supplied by \cite{Deb and Sen (
 \code{\link{Energy}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

@@ -5,11 +5,13 @@
 MW <- function(X1, X2, ..., sum.all = FALSE, m.max = 4, components = NULL, 
                alpha = 0.05, c.poly = 0.5, clust.alg = 'kmeans', n.perm = 0,
                combine.criterion = 'kernel', multiple.comparison = TRUE,
-               compress.algorithm = FALSE, nbasis = 8, seed = 42) {
+               compress.algorithm = FALSE, nbasis = 8, seed = NULL) {
   if(!requireNamespace("LPKsample", quietly = TRUE)) {
     stop("Package \"LPKsample\" required for using method MW().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   data.list <- c(list(X1, X2), list(...))
   if(any(!sapply(data.list, function(x) inherits(x, "matrix") | inherits(x, "data.frame")))) {
     stop("All datasets must be provided as data.frames or matrices.")

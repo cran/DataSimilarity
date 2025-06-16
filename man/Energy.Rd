@@ -8,7 +8,7 @@ Energy Statistic and Test
 Performs the Energy statistic multi-sample test (\cite{Székely and Rizzo, 2004}). The implementation here uses the \code{\link[energy]{eqdist.etest}} implementation from the \pkg{energy} package.
 }
 \usage{
-Energy(X1, X2, ..., n.perm = 0, seed = 42)
+Energy(X1, X2, ..., n.perm = 0, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -24,7 +24,7 @@ Further datasets as matrices or data.frames
 Number of permutations for Bootstrap test (default: 0, no Bootstrap test performed)
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -70,6 +70,7 @@ The test based on the Energy statistic (\cite{Székely and Rizzo, 2004}) is equi
 \code{\link{Cramer}}, \code{\link{DISCOB}}, \code{\link{DISCOF}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

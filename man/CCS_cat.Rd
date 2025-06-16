@@ -9,7 +9,7 @@ Performs the weighted edge-count two-sample test for multivariate data proposed 
 }
 \usage{
 CCS_cat(X1, X2, dist.fun, agg.type, graph.type = "mstree", K = 1, n.perm = 0, 
-        seed = 42)
+        seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -19,7 +19,7 @@ First dataset as matrix or data.frame
 Second dataset as matrix or data.frame
 }
   \item{dist.fun}{
-Function for calculating a distance matrix on the pooled dataset.
+Function for calculating the distance of two observations. Should take two vectors as its input and return their distance as a scalar value.
 }
   \item{agg.type}{
 Character giving the method for aggregating over possible similarity graphs. Options are \code{"u"} for union of possible similarity graphs and \code{"a"} for averaging over test statistics calculated on possible similarity graphs. 
@@ -34,7 +34,7 @@ Parameter for graph (default: 1). If \code{graph.type = "mstree"}, a \code{K}-MS
 Number of permutations for permutation test (default: 0, asymptotic test is performed).
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -79,6 +79,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{CCS}}, \code{\link{FR}}, \code{\link{CF}}, \code{\link{ZC}}, and \code{\link{gTests}} for versions of the tests for continuous data, and \code{\link{SH}} for performing the Schilling-Henze nearest neighbor test
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1cat <- matrix(sample(1:4, 300, replace = TRUE), ncol = 3)
 X2cat <- matrix(sample(1:4, 300, replace = TRUE, prob = 1:4), ncol = 3)

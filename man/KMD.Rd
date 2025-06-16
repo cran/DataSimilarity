@@ -9,7 +9,7 @@ Calculates the kernel measure of multi-sample dissimilarity (KMD) and performs a
 }
 \usage{
 KMD(X1, X2, ..., n.perm = 0, graph = "knn", k = ceiling(N/10), 
-    kernel = "discrete", seed = 42)
+    kernel = "discrete", seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -34,7 +34,7 @@ Number of neighbors for construction of \code{k}-nearest neighbor graph. Ignored
 Kernel used in calculation of KMD. Can either be \code{"discrete"} (default) for use of the discrete kernel or a kernal matrix with numbers of rows and columns corresponding to the number of datasets. For the latter, the entry in the \eqn{i}-th row and \eqn{j}-th column corresponds to the kernel value \eqn{k(i,j)}.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -83,6 +83,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{MMD}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

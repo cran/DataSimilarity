@@ -2,7 +2,7 @@
 ##                                  DISCO                                     ##
 ##                                                                            ##
 ################################################################################
-DISCOF <- function(X1, X2, ..., n.perm = 0, alpha = 1, seed = 42) {
+DISCOF <- function(X1, X2, ..., n.perm = 0, alpha = 1, seed = NULL) {
   if(!requireNamespace("energy", quietly = TRUE)) {
     stop("Package \"energy\" required for using method DISCOF().")
   }
@@ -18,7 +18,7 @@ DISCOF <- function(X1, X2, ..., n.perm = 0, alpha = 1, seed = 42) {
                 seed = seed, alpha = alpha)
 }
 
-DISCOB <- function(X1, X2, ..., n.perm = 0, alpha = 1, seed = 42) {
+DISCOB <- function(X1, X2, ..., n.perm = 0, alpha = 1, seed = NULL) {
   if(!requireNamespace("energy", quietly = TRUE)) {
     stop("Package \"energy\" required for using method DISCOB().")
   }

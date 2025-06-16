@@ -2,10 +2,12 @@
 ##                          Ntoutsi et al. (2008)                             ##
 ##                                                                            ##
 ################################################################################
-NKT <- function(X1, X2, target1 = "y", target2 = "y", method = 1, tune = TRUE, k = 5, 
-                n.eval = 100, seed = 42, ...) {
-  set.seed(seed)
-  stopifnot(method %in% 1:3)
+NKT <- function(X1, X2, target1 = "y", target2 = "y", version = 1, tune = TRUE, k = 5, 
+                n.eval = 100, seed = NULL, ...) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
+  stopifnot(version %in% 1:3)
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")
   }
@@ -30,7 +32,7 @@ NKT <- function(X1, X2, target1 = "y", target2 = "y", method = 1, tune = TRUE, k
   GCR <- calculateGCR(X1, X2, tune, k, n.eval, ...)
   res.intersect <- GCR$res.intersect
   sec.parti <- res.intersect$parti
-  if(method == 1) {
+  if(version == 1) {
     P1 <- colSums(calcP(sec.parti, X1, "joint"))
     P2 <- colSums(calcP(sec.parti, X2,"joint"))
     if(!(abs(sum(P1) - 1) < 1e-8 && abs(sum(P2) - 1) < 1e-8)) {
@@ -40,7 +42,7 @@ NKT <- function(X1, X2, target1 = "y", target2 = "y", method = 1, tune = TRUE, k
                       abs(sum(P1) - 1), abs(sum(P2) - 1) ))
     }
     s <- affinityCoef(P1, P2)
-  } else if(method == 3) {
+  } else if(version == 3) {
     P1 <- calcP(GCR$parti1, X1, "conditional")
     P2 <- calcP(GCR$parti2, X2, "conditional")
     S.C.A <- apply(res.intersect$combis, 1, function(comb) {
@@ -54,7 +56,7 @@ NKT <- function(X1, X2, target1 = "y", target2 = "y", method = 1, tune = TRUE, k
     }
     P.A <- colSums(calcP(sec.parti, rbind(X1, X2), "joint"))
     s <- drop(t(S.C.A) %*% P.A)
-  } else if(method == 2) {
+  } else if(version == 2) {
     P1 <- calcP(sec.parti, X1, "joint")
     P2 <- calcP(sec.parti, X2, "joint")
     if(!(abs(sum(P1) - 1) < 1e-8 && abs(sum(P2) - 1) < 1e-8)) {
@@ -72,9 +74,9 @@ NKT <- function(X1, X2, target1 = "y", target2 = "y", method = 1, tune = TRUE, k
               alternative = paste0("The distributions of ", 
                                    paste0(dname, collapse = " and "), 
                                    " are unequal."), 
-              method = paste0("Data similarity accorcing to Ntoutsi et al. (2008), method ", method),  
+              method = paste0("Data similarity according to Ntoutsi et al. (2008), version ", version),  
               data.name = paste0(dname, collapse = " and "), 
-              method = method)
+              version = version)
   class(res) <- "htest"
   return(res)
 }

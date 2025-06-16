@@ -9,7 +9,7 @@ Performs the Schilling-Henze two-sample test for multivariate data (\cite{Schill
 }
 \usage{
 SH(X1, X2, K = 1, graph.fun = knn.bf, dist.fun = stats::dist, n.perm = 0, 
-    dist.args = NULL, seed = 42)
+    dist.args = NULL, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -34,7 +34,7 @@ Number of permutations for permutation test (default: 0, asymptotic test is perf
 Named list of further arguments passed to \code{dist.fun}.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -76,6 +76,7 @@ The default of \code{K=1} is chosen rather arbitrary based on computational spee
 \code{\link{FR_cat}}, \code{\link{CF_cat}}, \code{\link{CCS_cat}}, and \code{\link{ZC_cat}} for versions of the test for categorical data
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

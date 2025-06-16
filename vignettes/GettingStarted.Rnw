@@ -1,0 +1,460 @@
+\documentclass[nojss]{jss}
+
+%% -- LaTeX packages and custom commands ---------------------------------------
+
+%% recommended packages
+\usepackage{orcidlink,thumbpdf,lmodern}
+
+%% additional packages
+%\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsfonts, amssymb, bbm, bm, mathabx}
+\usepackage{booktabs} 	
+\usepackage{longtable} 
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{lscape}
+\usepackage{fontawesome5}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{makecell}
+\renewcommand{\cellalign}{tl}
+\renewcommand{\theadalign}{tl}
+
+%% new custom commands
+\newcommand{\class}[1]{`\code{#1}'}
+\newcommand{\fct}[1]{\code{#1()}}
+
+\newcommand{\dif}{\mathop{}\!\mathrm{d}}
+
+%\VignetteIndexEntry{Getting Started with DataSimilarity}
+%\VignetteDepends{rpart.plot, nnet, knitr}
+
+%% For Sweave-based articles about R packages:
+%% need no \usepackage{Sweave}
+\SweaveOpts{engine=R, eps=FALSE, keep.source = TRUE}
+<<preliminaries, echo=FALSE, results=hide>>=
+op <- par(no.readonly = TRUE)
+old <- options()
+options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
+library("knitr")
+@
+
+
+%% -- Article metainformation (author, title, ...) -----------------------------
+\author{Marieke Stolte~\orcidlink{0009-0002-0711-6789}\\TU Dortmund University
+\And Luca Sauer\\TU Dortmund University \AND J\"org Rahnenf\"uhrer~\orcidlink{0000-0002-8947-440X} \\ TU Dortmund University \And Andrea Bommert~\orcidlink{0000-0002-1005-9351} \\ TU Dortmund University}
+\Plainauthor{Marieke Stolte, Luca Sauer, J\"org Rahnenf\"uhrer, Andrea Bommert}
+
+
+\title{Getting Started With \pkg{DataSimilarity}: Quantifying Similarity of Datasets and Multivariate Two- and $k$-Sample Testing}
+\Plaintitle{Getting Started With DataSimilarity: Quantifying Similarity of Datasets and Multivariate Two- and k-Sample Testing}
+\Shorttitle{Getting Started}
+
+%% - \Abstract{} almost as usual
+\Abstract{
+Quantifying the similarity of two or more datasets is a common task in various applications of statistics and machine learning, including two- or $k$-sample testing and meta- or transfer learning.
+The \pkg{DataSimilarity} package contains a variety of methods for quantifying the similarity of datasets.
+The package includes 36 methods of which 14 are implemented for the first time in \proglang{R}. 
+The remaining are wrapper functions for methods with already existing implementations that unify and simplify the various input and output formats of different methods and bundle the methods of many existing \proglang{R} packages in a single package.
+In this vignette, we show the basic workflow for using the package.  
+}
+
+\Keywords{dataset similarity, two-sample testing, multi-sample testing}
+\Plainkeywords{dataset similarity, two-sample testing, multi-sample testing}
+
+\Address{
+Marieke Stolte\\
+Department of Statistics\\
+TU Dortmund University\\
+Vogelpothsweg 87\\
+44227 Dortmund, Germany\\
+E-mail: \email{stolte@statistik.tu-dortmund.de}\\
+}
+
+\begin{document}
+\SweaveOpts{concordance=FALSE}
+
+\section{Introduction} \label{sec:intro}
+The challenge of quantifying how similar two or more datasets are arises in various contexts where two or more datasets should be compared. 
+This could be in the context of transferring results of a prediction model from one dataset to another, as well as for assessing how close simulated data is to a real-world dataset. 
+The most common usage is for two- or $k$-sample testing. 
+Formally, the two-sample problem is defined as the testing problem  
+\begin{equation}
+H_0: F_1 = F_2 \text{ vs. } H_1: F_1\ne F_2.\label{two.sample.problem}
+\end{equation}
+A two-sample test, therefore, can be used to check whether the underlying distributions of two datasets coincide. 
+Analogously, the $k$-sample problem is defined as
+\[
+H_0: F_1 = F_2 = \dots = F_k \text{ vs. } H_1: \exists i\ne j\in\{1,\dots,k\}: F_i\ne F_j,
+\]
+for $k$ distributions $F_1,\dots, F_k$. 
+
+Many different methods are proposed in the literature for quantifying the similarity of two or more datasets, and most of these define a two- or $k$-sample test. 
+In this package, a subset of these methods are implemented, which were selected as relevant from a literature review \citep{stolte_methods_2024}. 
+For more details on the methods and their selection, see the `Details' vignette. 
+In the following, the basic steps for using the \pkg{DataSimilarity} package are explained using real-world example datasets with different characteristics with regard to the scale level, number of datasets, and presence of a target variable in each dataset. 
+
+
+\section{Workflow} \label{sec:illustration}
+In the following, the typical workflow for working with the package is demonstrated. 
+
+
+There are two different use cases with different workflows. 
+\begin{itemize}
+\item[a)] We already know which method to apply to our dataset comparison at hand.
+\item[b)] We have two datasets that we want to compare, but we do not have a specific method in mind. 
+\end{itemize}
+
+In both cases, we first load the package: 
+%
+<<loadpackage, echo = TRUE>>=
+library("DataSimilarity")
+@
+
+In case a), the workflow for using the package would be to find the corresponding function for the method and apply it to the data. 
+The full list of methods can also be found in the `Details' vignette as well as in the \code{method.table} dataset.
+
+In case b), the package can also be used as a tool for finding an appropriate method. 
+This depends on the dataset characteristics. 
+Here, we distinguish between numeric and categorical data, the number of datasets (two or more than two), and whether or not the datasets include a target variable. 
+We demonstrate how to find and apply a method for different types of datasets in the following. 
+The general workflow for case b) can be summarized as follows: 
+\begin{enumerate}
+\item Load the package. 
+\item Call \fct{findSimilarityMethod} to find an appropriate similarity method.
+\item Call \fct{DataSimilarity} or use the function corresponding to the method found in 2. to apply the chosen method to the datasets at hand.
+\end{enumerate}
+
+For the 2nd step, we present six important special cases in the following for datasets with different characteristics and demonstrate the package workflow in each of these special cases.
+For finding the appropriate methods in 2., there is a list of criteria (e.g.\ applicability to numeric or categorical data) which can guide our choice of an appropriate method. 
+These were previously introduced by \citet{stolte_methods_2024}.
+The desired criteria can be passed to the \fct{findSimilarityMethod} by setting the corresponding arguments to \code{TRUE}. 
+The function returns by default the function names for all implemented and suitable methods. 
+By setting \code{only.names = FALSE}, the full information on which criteria the method fulfills can be retrieved. 
+
+\subsection{Exactly two numeric datasets without target variables}
+The dataset \code{dhfr} \citep{sutherland_three-dimensional_2004} from the \pkg{caret} package \citep{caret} is a binary classification dataset (regarding Dihydrofolate Reductase inhibition) consisting of 325 compounds of which 203 are labeled as `active' and 122 as `inactive'. 
+The variables are 228 molecular descriptors.
+As the active and inactive compounds should differ in their descriptors, we divide the dataset according to the first variable that indicates the activity status. 
+<<preparedhfr, echo = TRUE, cache = TRUE>>=
+data(dhfr, package = "caret")
+act <- dhfr[dhfr$Y == "active", -1]
+inact <- dhfr[dhfr$Y == "inactive", -1]
+@
+For finding an appropriate method, we can use the function \fct{findSimilarityMethod}.
+We specify that we have two numeric datasets.
+As two datasets is already the default, we only need to specify \code{Numeric = TRUE}: 
+<<findMethod2Num, echo = TRUE, cache = TRUE>>=
+findSimilarityMethod(Numeric = TRUE)
+@
+We can also get more information if we set \code{only.names = FALSE}:
+<<findMethod2NumAllInfo, echo = TRUE, cache = TRUE>>=
+findSimilarityMethod(Numeric = TRUE, only.names = FALSE)
+@
+We could use this additional information and choose the method that fulfills most criteria among all methods that fulfill the required criteria, i.e., here, the KMD. 
+For demonstration purposes, we apply the Rosenbaum cross-match test here to check whether the active and inactive compounds differ.
+For a description of the test, see the `Details' vignette.
+As the combined sample size is smaller than 340, we can apply the exact test. 
+We can either use the \fct{DataSimilarity} function and specify the \code{method} argument accordingly:
+%
+<<exRosenbaumDS, echo = TRUE, cache = TRUE, tidy = TRUE>>=
+DataSimilarity(act, inact, method = "Rosenbaum", exact = TRUE)
+@
+Alternatively, we can use the \fct{Rosenbaum} function directly:
+%
+<<exRosenbaum, echo = FALSE, cache = TRUE, tidy = TRUE>>=
+res.Rosenbaum <- Rosenbaum(act, inact, exact = TRUE)
+@
+<<exRosenbaum1, echo = TRUE, eval = FALSE, cache = TRUE, tidy = TRUE>>=
+Rosenbaum(act, inact, exact = TRUE)
+@
+<<exRosenbaum2, echo = FALSE, cache = TRUE, tidy = TRUE>>=
+print(res.Rosenbaum)
+@
+%
+The output of the Rosenbaum test is an object of class \class{htest}. 
+The output of the other methods is also in this format. 
+The statistic value can be accessed by saving the result and accessing the \code{statistic} element of the saved result: 
+<<exRosenbaum3, echo = TRUE, cache = TRUE, tidy = TRUE>>=
+res.Rosenbaum <- Rosenbaum(act, inact, exact = TRUE)
+res.Rosenbaum$statistic
+@
+The $p$~value can be accessed analogously as follows: 
+<<exRosenbaum4, echo = TRUE, cache = TRUE, tidy = TRUE>>=
+res.Rosenbaum$p.value
+@
+This holds for almost all other functions in this package. 
+Additionally, the output might include more information specific to the method, which is then described on the respective help page. 
+For the Rosenbaum test, for example, the unstandardized cross-match count is also returned and can be accessed via 
+<<exRosenbaum5, echo = TRUE, cache = TRUE, tidy = TRUE>>=
+res.Rosenbaum$estimate
+@
+The cross-match count is equal to \Sexpr{res.Rosenbaum$estimate}. 
+At most, there could be $122$ cross-matches if each observation from the `inactive' dataset was connected to an observation in the `active' dataset. 
+Therefore, the cross-match count of $20$ can be considered a rather small value. 
+This is also reflected by the $z$ score of \Sexpr{round(res.Rosenbaum$statistic, 2)}. %\Sexpr{round(res.Rosenbaum$statistic, 2)}
+Consequently, we see that the hypothesis of equal distributions can be rejected with a $p$~value smaller than $2.2\cdot 10^{-16}$. 
+
+We obtain a warning that informs us that a ghost value was introduced when calculating the optimal non-bipartite matching, due to the odd pooled sample size.
+This means that an artificial point was added to the sample that has the highest distance to all other points in the sample, such that the optimal non-bipartite matching, which needs an even sample size, could be calculated. 
+The ghost value and the point with which it was matched are then discarded from the subsequent calculations.
+
+\subsection{More than two numeric datasets without target variables}
+The well-known \code{iris} dataset \citep{fisher_use_1936} included in the \pkg{datasets} package that comes with base \proglang{R} \citep{R_4_1_2} includes measurements of sepal and petals of 50 flowers each of three iris species.
+We compare the datasets for the three species Iris setosa, versicolor, and virginica, which are known to differ in their sepal and petal measurements.
+%
+<<prepareiris, echo = TRUE, cache = TRUE>>=
+data("iris")
+setosa <- iris[iris$Species == "setosa", -5]
+versicolor <- iris[iris$Species == "versicolor", -5]
+virginica <- iris[iris$Species == "virginica", -5]
+@
+%
+For finding an appropriate method, we can use the function \fct{findSimilarityMethod} again and specify that we have more than two numeric datasets using the \code{Numeric} and the \code{Multiple.samples} options: 
+<<findMethod3Num, echo = TRUE, cache = TRUE>>=
+findSimilarityMethod(Numeric = TRUE, Multiple.Samples = TRUE)
+@
+For comparing the three datasets, we could, for example, use the \citet{mukherjee_distribution-free_2022} Mahalanobis multisample cross-match (MMCM) test, which is a generalization of the cross-match test for multiple samples.
+For a description of the test, see the `Details' vignette.
+Again, we can either use the \fct{DataSimilarity} function or the \fct{MMCM} function directly
+%
+<<exMMCM, echo = TRUE, cache = TRUE>>=
+DataSimilarity(setosa, versicolor, virginica, method = "MMCM")
+MMCM(setosa, versicolor, virginica)
+@
+%
+The MMCM statistic value on its own is hard to interpret. 
+However, the test rejects the null hypothesis of equal distributions with $p < 2.2\cdot 10^{-16}$.
+Therefore, we can conclude that the observed MMCM value presents an extreme value when assuming the null. 
+Thus, the datasets are dissimilar. 
+
+\subsection{Exactly two numeric datasets with target variables}
+The \code{segmentationData} dataset \citep{hill_impact_2007} in the \pkg{caret} package \citep{caret} includes cell body segmentation data. 
+The dataset contains 119 imaging measurements of 2019 cells to predict the segmentation that is divided into the two classes \code{PS} for `poorly segmented' and \code{WS} for `well segmented'. 
+Moreover, there is a division into 1009 observations used for training and 1010 observations used as a test set. 
+We compare this training and test set. 
+Ideally, the distributions of the training and test set should be equal in this predictive modelling setting. 
+%
+<<preparesegmentationData, echo = TRUE, cache = TRUE, tidy = TRUE>>=
+data(segmentationData, package = "caret")
+test <- segmentationData[segmentationData$Case == "Test", -(1:2)]
+train <- segmentationData[segmentationData$Case == "Train", -(1:2)]
+@
+%
+The following methods would be appropriate to use: 
+%
+<<findMethodNumY, echo = TRUE, cache = TRUE>>=
+findSimilarityMethod(Numeric = TRUE, Target.Inclusion = TRUE)
+@
+% 
+Setting \code{Target.Inclusion = TRUE} selects only the methods that can handle datasets that include a target variable.
+For demonstration, we choose the method of \citet{ntoutsi_general_2008} and use all three proposed similarity measures NTO1, NTO2, and NTO3.
+For a description of the method, see the `Details' vignette.
+The \code{target1} and \code{target2} arguments have to be specified as the column names of the target variable in the first and second supplied datasets, respectively.
+Here, the target variable is named \code{"Class"} in both cases.
+Again, we can use either the \fct{DataSimilarity} function or \fct{NKT}.
+%
+<<exNKT, echo = TRUE, cache = TRUE>>=
+DataSimilarity(train, test, method = "NKT", target1 = "Class", 
+               target2 = "Class", tune = FALSE)
+NKT(train, test, target1 = "Class", target2 = "Class", tune = FALSE)
+DataSimilarity(train, test, method = "NKT", target1 = "Class",
+               target2 = "Class", tune = FALSE, version = 2)
+NKT(train, test, target1 = "Class", target2 = "Class", tune = FALSE, 
+    version = 2)
+DataSimilarity(train, test, method = "NKT", target1 = "Class", 
+               target2 = "Class", tune = FALSE, version = 3)
+NKT(train, test, target1 = "Class", target2 = "Class", tune = FALSE,
+    version = 3)
+@
+%
+We observe high similarity between the training and test datasets with all three methods, reflected by the similarity values \code{s} that are all close to the maximal value $1$. 
+For the method of \citet{ntoutsi_general_2008}, no test is proposed and therefore, no $p$~value is calculated. 
+
+\subsection{Exactly two categorical datasets without target variables} 
+The \code{banque} dataset from the \pkg{ade4} package \citep{ade4} consists of bank survey data of 810 customers.
+All variables are categorical and contain socio-economic information of the customers. 
+We divide the data into bank card owners and non-bank card owners and compare these two groups. 
+In total, 243 out of the 810 customers own a bank card.
+Bank card owners and non-bank card owners might differ in their socio-economic characteristics.
+%
+<<preparebanque1, echo = TRUE, cache = TRUE>>=
+data(banque , package = "ade4")
+card <- banque[banque$cableue == "oui", -7]
+no.card <- banque[banque$cableue == "non", -7]
+@
+%
+We again apply the \fct{findSimilarityMethod} function to find appropriate methods for comparing two categorical datasets.
+Again, two samples are the default. 
+Therefore, we only have to specify \code{Categorical = TRUE}.
+<<findMethod2Cat, echo = TRUE, cache = TRUE>>=
+findSimilarityMethod(Categorical = TRUE)
+@
+For demonstration, we use the random forest test of \citet{hediger_use_2021} to compare these two groups. 
+For a description of the test, see the `Details' vignette.
+For easier interpretation, we look at the overall out-of-bag (OOB) prediction error instead of the per-class OOB prediction error and perform a permutation test with 1000 permutations.
+For reproducibility, we set a seed before applying the method. 
+Alternatively, we could supply the seed via the \code{seed} argument for setting the seed within the function.
+%
+<<exHMN, echo = FALSE, cache = TRUE>>=
+# HMN.res <- HMN(card, no.card, n.perm = 1000, statistic = "OverallOOB") 
+# save(HMN.res, file = "tmpResHMNVignette.RData")
+load("tmpResHMNVignette.RData")
+@
+<<exHMNDS, echo = TRUE, eval = FALSE, cache = TRUE>>=
+set.seed(1234)
+DataSimilarity(card, no.card, method = "HMN", n.perm = 1000,
+               statistic = "OverallOOB") 
+@
+<<exHMNDS2, echo = FALSE, cache = TRUE>>=
+print(HMN.res)
+@
+<<exHMN1, echo = TRUE, eval = FALSE, cache = TRUE>>=
+set.seed(1234)
+HMN(card, no.card, n.perm = 1000, statistic = "OverallOOB") 
+@
+<<exHMN2, echo = FALSE, cache = TRUE>>=
+print(HMN.res)
+@
+%
+The overall OOB prediction error is \Sexpr{round(HMN.res$statistic, 3)}, which is considerably smaller than the naive prediction error of $243/810 = 0.3$. 
+Therefore, the random forest can distinguish between the datasets, so we can conclude that the datasets differ.
+This is also reflected by the $p$~value of \Sexpr{sprintf("%.3e", HMN.res$p.value)}. 
+
+\subsection{More than two categorical datasets without target variables} 
+We consider the \code{banque} dataset from the \pkg{ade4} package \citep{ade4} again. 
+This time, we split it by the nine socio-professional categories given by `csp', which are again expected to differ with regard to the other socio-economic characteristics.
+%
+<<preparebanque2, echo = TRUE, cache = TRUE>>=
+data(banque, package = "ade4")
+agric <- banque[banque$csp == "agric", -1]
+artis <- banque[banque$csp == "artis", -1]
+cadsu <- banque[banque$csp == "cadsu", -1]
+inter <- banque[banque$csp == "inter", -1]
+emplo <- banque[banque$csp == "emplo", -1]
+ouvri <- banque[banque$csp == "ouvri", -1]
+retra <- banque[banque$csp == "retra", -1]
+inact <- banque[banque$csp == "inact", -1]
+etudi <- banque[banque$csp == "etudi", -1]
+@
+%
+To compare these datasets, we now need a method that can handle multiple datasets at once: 
+<<findMethod7Cat, echo = TRUE, cache = TRUE>>=
+findSimilarityMethod(Categorical = TRUE, Multiple.Samples = TRUE)
+@
+We apply the classifier two-sample test (C2ST). 
+For a description of the test, see the `Details' vignette.
+First, we use the default $K$-NN classifier. 
+Categorical variables are dummy-coded. 
+Again, we can use either \fct{DataSimilarity} or \fct{C2ST}:
+%
+<<exC2STKNN, echo = FALSE, cache = TRUE>>=
+C2ST.res <- C2ST(agric, artis, cadsu, inter, emplo, ouvri, retra, inact, etudi)
+@
+<<exC2STKNNDS1, echo = TRUE, eval = FALSE, cache = TRUE>>=
+DataSimilarity(agric, artis, cadsu, inter, emplo, ouvri, retra, inact,
+               etudi, method = "C2ST")
+@
+<<exC2STKNNDS2, echo = FALSE, cache = TRUE>>=
+print(C2ST.res)
+@
+<<exC2STKNN1, echo = TRUE, eval = FALSE, cache = TRUE>>=
+C2ST(agric, artis, cadsu, inter, emplo, ouvri, retra, inact, etudi)
+@
+<<exC2STKNN2, echo = FALSE, cache = TRUE>>=
+print(C2ST.res)
+@
+%
+The accuracy of the $K$-NN classifier is \Sexpr{round(C2ST.res$statistic, 3)}. 
+It is larger than the naive accuracy for always predicting the largest class, which is given by \code{prob = \Sexpr{round(C2ST.res$parameter[2], 3)}} in the output. 
+The classifier seems to be able to distinguish between the datasets, and we can therefore regard them as dissimilar. 
+Moreover, the null hypothesis of equal distributions can be rejected with a $p$~value of \Sexpr{sprintf("%.3e", C2ST.res$p.value)}. 
+
+For demonstration, we additionally perform the C2ST with a neural net classifier. 
+%
+<<exC2STMLP, echo = TRUE, cache = TRUE>>=
+DataSimilarity(agric, artis, cadsu, inter, emplo, ouvri, retra, inact,
+               etudi, method = "C2ST", classifier = "nnet",
+               train.args = list(trace = FALSE))
+C2ST(agric, artis, cadsu, inter, emplo, ouvri, retra, inact, etudi, 
+     classifier = "nnet", train.args = list(trace = FALSE))
+@
+%
+The results are very similar to using $K$-NN. 
+
+\subsection{Exactly two categorical datasets with target variables} % OTDD
+We consider the \code{banque} dataset from the \pkg{ade4} package \citep{ade4} again. 
+In this case, we interpret the savings bank amount (\code{eparliv}) variable as the target variable, which is again supplied via the \code{target1} and \code{target2} arguments. 
+It is divided into the three categories `$> 20000$', `$> 0 $ and $ <20000$', and `nulle'.
+We divide the data into the socio-professional categories as before, and now need a method for two categorical datasets that include a target variable.
+<<findMethodCatY, echo = TRUE, cache = TRUE>>=
+findSimilarityMethod(Categorical = TRUE, Target.Inclusion = TRUE)
+@
+We use the optimal transport dataset distance (OTDD) to compare the resulting datasets for craftsmen, shopkeepers, company directors (`artis'), to that of higher intellectual professions (`cadsu'), and to that of manual workers (`ouvri'). 
+For a description of the method, see the `Details' vignette.
+As all variables are categorical, we use the Hamming distance instead of the default Euclidean distance.
+We can either use \fct{DataSimilarity} or \fct{OTDD}.
+%
+<<exOTDD, echo = FALSE, cache = TRUE>>=
+# res.OTDD1 <- OTDD(artis, cadsu, target1 = "eparliv", target2 = "eparliv", 
+#                   feature.cost = hammingDist) 
+# res.OTDD2 <- OTDD(artis, ouvri, target1 = "eparliv", target2 = "eparliv", 
+#                   feature.cost = hammingDist) 
+# save(res.OTDD1, res.OTDD2, file = "tmpResOTDDVignette.RData")
+load("tmpResOTDDVignette.RData")
+@
+<<exOTDDDS1, echo = TRUE, eval = FALSE, cache = TRUE>>=
+DataSimilarity(artis, cadsu, method = "OTDD", target1 = "eparliv", 
+               target2 = "eparliv", feature.cost = hammingDist) 
+@
+<<exOTDDDS2, echo = FALSE, cache = TRUE>>=
+print(res.OTDD1)
+@
+<<exOTDD1, echo = TRUE, eval = FALSE, cache = TRUE>>=
+OTDD(artis, cadsu, target1 = "eparliv", target2 = "eparliv", 
+     feature.cost = hammingDist) 
+@
+<<exOTDD2, echo = FALSE, cache = TRUE>>=
+print(res.OTDD1)
+@
+%
+We obtain a dataset distance of \Sexpr{round(res.OTDD1$statistic, 3)} between craftsmen/shopkeepers/company directors and executives/higher intellectual professions.
+For the OTDD, low values correspond to high similarity, and the minimum value is 0. 
+The observed value is clearly larger than zero, so the datasets are not exactly similar. 
+How dissimilar they are is however hard to interpret from the observed OTDD value on its own.
+For the OTDD, no test is proposed and therefore, no $p$~value is calculated. 
+<<exOTDDDS3, echo = TRUE, eval = FALSE, cache = TRUE>>=
+DataSimilarity(artis, ouvri, method = "OTDD", target1 = "eparliv", 
+               target2 = "eparliv", feature.cost = hammingDist) 
+@
+<<exOTDDDS4, echo = FALSE, cache = TRUE>>=
+print(res.OTDD2)
+@
+
+<<exOTDD3, echo = TRUE, eval = FALSE, cache = TRUE>>=
+OTDD(artis, ouvri, target1 = "eparliv", target2 = "eparliv", 
+     feature.cost = hammingDist) 
+@
+<<exOTDD4, echo = FALSE, cache = TRUE>>=
+print(res.OTDD2)
+@
+We obtain a dataset distance of \Sexpr{round(res.OTDD2$statistic, 3)} between craftsmen/shopkeepers/company directors and manual workers.
+Again, this value on its own is hard to interpret.
+However, we can compare the values and conclude that the data of craftsmen/shopkeepers/company directors is more similar to that of executives/higher intellectual professions than to that of manual workers. 
+
+
+\section*{Acknowledgments}
+This work has been supported (in part) by the Research Training Group ``Biostatistical Methods for High-Dimensional Data in Toxicology'' (RTG 2624, Project P1) funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation - Project Number 427806116).\\
+We would like to thank Nabarun Deb and Bodhisattva Sen for allowing us to use their \proglang{R} implementation of their test for the package. 
+Moreover, we would like to thank David Alvarez-Melis, whose \proglang{Python} implementation of the OTDD was the basis for our \proglang{R} implementation.
+
+<<reset, echo=FALSE, results=hide>>=
+options(old)
+par(op)
+@
+
+\bibliography{refs}
+
+\end{document}

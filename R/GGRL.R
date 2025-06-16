@@ -4,8 +4,10 @@
 ################################################################################
 GGRL <- function(X1, X2, target1 = "y", target2 = "y", n.perm = 0, m = 1, 
                  diff.fun = f.a, agg.fun = sum, 
-                 tune = TRUE, k = 5, n.eval = 100, seed = 42, ...) {
-  set.seed(seed)
+                 tune = TRUE, k = 5, n.eval = 100, seed = NULL, ...) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")
   }
@@ -55,7 +57,7 @@ GGRL <- function(X1, X2, target1 = "y", target2 = "y", n.perm = 0, m = 1,
               alternative = paste0("The distributions of ", 
                                    paste0(dname, collapse = " and "), 
                                    " are unequal."), 
-              method = paste0("Data similarity accorcing to Ganti et al. (1999)"),  
+              method = paste0("Data similarity according to Ganti et al. (1999)"),  
               data.name = paste0(dname, collapse = " and "), 
               diff.fun = diff.fun, agg.fun = agg.fun)
   class(res) <- "htest"
@@ -64,8 +66,10 @@ GGRL <- function(X1, X2, target1 = "y", target2 = "y", n.perm = 0, m = 1,
 
 GGRLCat <- function(X1, X2, target1 = "y", target2 = "y", n.perm = 0, m = 1, 
                     diff.fun = f.aCat, agg.fun = sum, 
-                    tune = TRUE, k = 5, n.eval = 100, seed = 42, ...) {
-  set.seed(seed)
+                    tune = TRUE, k = 5, n.eval = 100, seed = NULL, ...) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")
   }

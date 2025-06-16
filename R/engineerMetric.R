@@ -2,8 +2,10 @@
 ##                            ENGINEER METRIC                                 ##
 ##                                                                            ##
 ################################################################################
-engineerMetric <- function(X1, X2, type = "F", seed = 42) {
-  set.seed(seed)
+engineerMetric <- function(X1, X2, type = "F", seed = NULL) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")
   }

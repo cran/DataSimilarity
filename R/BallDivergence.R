@@ -2,13 +2,26 @@
 ##                              BALL DIVERGENCE                               ##
 ##                                                                            ##
 ################################################################################
-BallDivergence <- function (X1, X2,..., n.perm = 0, seed = 42, num.threads = 0, 
+BallDivergence <- function (X1, X2,..., n.perm = 0, seed = NULL, num.threads = 0, 
                             kbd.type = "sum", 
                             weight = c("constant", "variance"), 
                             args.bd.test = NULL) {
   if(!requireNamespace("Ball", quietly = TRUE)) {
     stop("Package \"Ball\" required for using method BallDivergence().")
   }
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
+  genv <- globalenv()
+  # Make sure to leave '.Random.seed' as-is on exit
+  old_seed <- genv$.Random.seed
+  on.exit(suspendInterrupts({
+    if (is.null(old_seed)) {
+      rm(".Random.seed", envir = genv, inherits = FALSE)
+    } else {
+      assign(".Random.seed", value = old_seed, envir = genv, inherits = FALSE)
+    }
+  }))
   data.list <- c(list(X1, X2), list(...))
   if(any(!sapply(data.list, function(x) inherits(x, "matrix") | inherits(x, "data.frame")))) {
     stop("All datasets must be provided as data.frames or matrices.")

@@ -2,7 +2,7 @@
 ##                          SHORTEST HAMILTON PATH                            ##
 ##                                                                            ##
 ################################################################################
-HamiltonPath <- function(X1, X2, seed = 42) {
+HamiltonPath <- function(X1, X2, seed = NULL) {
   if(!requireNamespace("rlemon", quietly = TRUE)) {
     stop("Package \"rlemon\" required for using method HamiltonPath().")
   }
@@ -13,7 +13,9 @@ HamiltonPath <- function(X1, X2, seed = 42) {
   colnames(X1) <- colnames(X2) <- paste0("X", 1:ncol(X1))
   dists <- as.matrix(dist(rbind(X1, X2), upper = TRUE))
   # extract vertices corresponding to (sorted) edges
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   v1 <- unlist(sapply(1:(N-1), function(n) 1:n))
   v2 <- unlist(sapply(1:(N-1), function(n) rep(n + 1, n)))
   E <- cbind(v1, v2)

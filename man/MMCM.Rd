@@ -8,7 +8,7 @@ Multisample Mahalanobis Crossmatch (MMCM) Test
 Performs the multisample Mahalanobis crossmatch (MMCM) test (\cite{Mukherjee et al., 2022}).
 }
 \usage{
-MMCM(X1, X2, ..., dist.fun = stats::dist, dist.args = NULL, seed = 42)
+MMCM(X1, X2, ..., dist.fun = stats::dist, dist.args = NULL, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -27,7 +27,7 @@ Function for calculating a distance matrix on the pooled dataset (default: \code
 Named list of further arguments passed to \code{dist.fun} (default: \code{NULL}).
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -76,6 +76,7 @@ This might affect the validity of the test negatively.
 \code{\link{Petrie}}, \code{\link{Rosenbaum}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

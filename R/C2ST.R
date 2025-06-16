@@ -2,16 +2,18 @@
 ##                      CLASSIFIER TWO-SAMPLE TEST (C2ST)                     ##
 ##                                                                            ##
 ################################################################################
-C2ST <- function(X1, X2, ..., split = 0.7, thresh = 0, method = "knn", 
+C2ST <- function(X1, X2, ..., split = 0.7, thresh = 0, classifier = "knn", 
                  control = NULL, train.args = NULL, 
-                 seed = 42) {
+                 seed = NULL) {
   if(!requireNamespace("Ecume", quietly = TRUE)) {
     stop("Package \"Ecume\" required for using method C2ST().")
   }
   if(is.null(control)) {
     control <- caret::trainControl(method = "cv")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   data.list <- c(list(X1, X2), list(...))
   if(any(!sapply(data.list, function(x) inherits(x, "matrix") | inherits(x, "data.frame")))) {
     stop("All datasets must be provided as data.frames or matrices.")
@@ -27,7 +29,7 @@ C2ST <- function(X1, X2, ..., split = 0.7, thresh = 0, method = "knn",
   })
   res <- do.call(Ecume::classifier_test, 
                  c(list(x = data.list, split = split, 
-                        thresh = thresh, method = method, 
+                        thresh = thresh, method = classifier, 
                         control = control), 
                    train.args))
   
@@ -38,7 +40,7 @@ C2ST <- function(X1, X2, ..., split = 0.7, thresh = 0, method = "knn",
     dname <- c(deparse1(substitute(X1)), deparse1(substitute(X2)))
   } else {
     mc <- as.list(match.call())
-    mc <- mc[!names(mc) %in% c("split", "thresh", "method", "control", "train.args", 
+    mc <- mc[!names(mc) %in% c("split", "thresh", "classifier", "control", "train.args", 
                                "seed")]
     dname <- sapply(mc[-1], deparse)
   }
@@ -49,9 +51,9 @@ C2ST <- function(X1, X2, ..., split = 0.7, thresh = 0, method = "knn",
               alternative = ifelse(K > 2, "At least one pair of distributions are unequal.", 
                                    paste0("The distributions of ", dname, " are unequal.")),
               method = paste0("Approximative Classifier Two-Sample Test using ", 
-                              method), 
+                              classifier), 
               data.name = dname, 
-              classifier = method)
+              classifier = classifier)
   class(res) <- "htest"
   return(res)
 }

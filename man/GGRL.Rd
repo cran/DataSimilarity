@@ -14,9 +14,9 @@ Calculates Decision-Tree Based Measure of Dataset Distance by \cite{Ganti et al.
 }
 \usage{
 GGRL(X1, X2, target1 = "y", target2 = "y", n.perm = 0, m = 1, diff.fun = f.a, 
-      agg.fun = sum, tune = TRUE, k = 5, n.eval = 100, seed = 42, ...)
+      agg.fun = sum, tune = TRUE, k = 5, n.eval = 100, seed = NULL, ...)
 GGRLCat(X1, X2, target1 = "y", target2 = "y", n.perm = 0, m = 1, diff.fun = f.aCat, 
-        agg.fun = sum, tune = TRUE, k = 5, n.eval = 100, seed = 42, ...)
+        agg.fun = sum, tune = TRUE, k = 5, n.eval = 100, seed = NULL, ...)
 f.a(sec.parti, X1, X2)
 f.s(sec.parti, X1, X2)
 f.aCat(sec.parti, X1, X2)
@@ -57,7 +57,7 @@ Number of folds used in cross-validation for parameter tuning (default: 5). Igno
 Number of evaluations for random search used for parameter tuning (default: 100). Ignored if \code{tune = FALSE}.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
   \item{\dots}{
 Further arguments passed to \code{\link[rpart:rpart]{rpart}}. Ignored if \code{tune = TRUE}.
@@ -81,7 +81,7 @@ The aggregate function aggregates the results of the difference function over al
 \section{Applicability}{
 \tabular{llll}{
      Target variable?   \tab Numeric? \tab Categorical? \tab K-sample? \cr
-     No \tab Yes \tab Yes \tab No \cr
+     Yes \tab Yes \tab Yes \tab No \cr
   }
 }
 \value{
@@ -109,6 +109,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{NKT}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)
@@ -139,5 +140,6 @@ if(requireNamespace("rpart", quietly = TRUE)) {
 \keyword{ htest }
 \keyword{ numeric }
 \keyword{ categorical }
+\keyword{ target variable }
 \keyword{ comparison of density functions }
 \concept{ dataset similarity }

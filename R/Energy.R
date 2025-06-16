@@ -2,7 +2,7 @@
 ##                            ENERGY STATISTIC                                ##
 ##                                                                            ##
 ################################################################################
-Energy <- function(X1, X2, ..., n.perm = 0, seed = 42) {
+Energy <- function(X1, X2, ..., n.perm = 0, seed = NULL) {
   if(!requireNamespace("energy", quietly = TRUE)) {
     stop("Package \"energy\" required for using method Energy().")
   }

@@ -2,13 +2,13 @@
 \alias{Jeffreys}
 \encoding{UTF-8}
 \title{
-Jeffreys divergence
+Jeffreys Divergence
 }
 \description{
 The function implements Jeffreys divergence by using KL Divergence Approximation (\cite{Sugiyama et al. 2013}). By default, the implementation uses method KLIEP of function \code{\link[densratio]{densratio}} from the \pkg{densratio} package for density ration estimation.
 }
 \usage{
-Jeffreys(X1, X2, method = "KLIEP", verbose = FALSE, seed = 42)
+Jeffreys(X1, X2, fitting.method = "KLIEP", verbose = FALSE, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -17,14 +17,14 @@ First dataset as matrix or data.frame
   \item{X2}{
 Second dataset as matrix or data.frame
 }
-  \item{method}{
+  \item{fitting.method}{
 "KLIEP" (default), "uLSIF" or "RuLSIF"
 }
   \item{verbose}{
 logical (default: FALSE)
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -59,6 +59,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link[densratio:densratio]{densratio}}
 }
 \examples{
+set.seed(0)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

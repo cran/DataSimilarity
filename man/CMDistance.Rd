@@ -10,7 +10,7 @@ Calculates the Constrained Minimum Distance (\cite{Tatti, 2007}) between two dat
 \usage{
 CMDistance(X1, X2, binary = NULL, cov = FALSE,
             S.fun = function(x) as.numeric(as.character(x)), 
-            cov.S = NULL, Omega = NULL, seed = 42)
+            cov.S = NULL, Omega = NULL, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -35,7 +35,7 @@ Covariance matix of feature function (default: \code{NULL}). Ignored if \code{bi
 Sample space as matrix (default: \code{NULL}, the sample space is derived from the data internally). Each row represents one value in the sample space. Used for calculating the covariance matrix if \code{cov.S = NULL}. Either \code{cov.S} or \code{Omega} must be given. Ignored if \code{binary = TRUE}.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -89,6 +89,7 @@ CMDistance(X1 = data.frame(c("C", "C", "C", "A")),
            Omega = data.frame(c("A", "B", "C")))
 
 # Demonstration of corrected calculation
+set.seed(1234)
 X1bin <- matrix(sample(0:1, 100 * 3, replace = TRUE), ncol = 3)
 X2bin <- matrix(sample(0:1, 100 * 3, replace = TRUE, prob = 1:2), ncol = 3)
 CMDistance(X1bin, X2bin, binary = TRUE, cov = FALSE)
@@ -100,6 +101,7 @@ CMDistance(X1bin, X2bin, binary = FALSE, S.fun = S.fun,
             cov.S = 0.5 * diag(3))$statistic * sqrt(2)
 
 # Example for non-binary data
+set.seed(1234)
 X1cat <- matrix(sample(1:4, 300, replace = TRUE), ncol = 3)
 X2cat <- matrix(sample(1:4, 300, replace = TRUE, prob = 1:4), ncol = 3)
 CMDistance(X1cat, X2cat, binary = FALSE, S.fun = S.fun, 

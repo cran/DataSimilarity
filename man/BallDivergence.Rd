@@ -2,13 +2,13 @@
 \alias{BallDivergence}
 \encoding{UTF-8}
 \title{
-Ball Divergence based two- or \eqn{k}-sample test
+Ball Divergence Based Two- or \eqn{k}-sample Test
 }
 \description{
 The function implements the \cite{Pan et al. (2018)} multivariate two- or \eqn{k}-sample test based on the Ball Divergence. The implementation here uses the \code{\link[Ball]{bd.test}} implementation from the \pkg{Ball} package.
 }
 \usage{
-BallDivergence(X1, X2, ..., n.perm = 0, seed = 42, num.threads = 0, 
+BallDivergence(X1, X2, ..., n.perm = 0, seed = NULL, num.threads = 0, 
                 kbd.type = "sum", weight = c("constant", "variance"), 
                 args.bd.test = NULL)
 }
@@ -26,7 +26,8 @@ Optionally more datasets as matrices or data.frames
 Number of permutations for permutation test (default: 0, no permutation test performed). Note that for more than two samples, no test is performed.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
+
 }
   \item{num.threads}{
 Number of threads (default: 0, all available cores are used)
@@ -77,6 +78,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 }
 
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

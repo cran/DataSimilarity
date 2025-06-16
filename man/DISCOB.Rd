@@ -8,7 +8,7 @@ Distance Components (DISCO) Tests
 Performs Energy statistics distance components (DISCO) multi-sample tests (\cite{Rizzo and Székely, 2010}). The implementation here uses the \code{\link[energy:disco]{disco}} implementation from the \pkg{energy} package.
 }
 \usage{
-DISCOB(X1, X2, ..., n.perm = 0, alpha = 1, seed = 42)
+DISCOB(X1, X2, ..., n.perm = 0, alpha = 1, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -27,7 +27,7 @@ Number of permutations for Bootstrap test (default: 0, no Bootstrap test perform
 Power of the distance used for generalized Energy statistic (default: 1). Has to lie in \eqn{(0,2]}. For values in \eqn{(0, 2)}, consistency of the resulting test has been shown.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -72,6 +72,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{DISCOF}}, \code{\link{Energy}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

@@ -2,11 +2,13 @@
 ##                            JEFFREYS DIVERGENCE                             ##
 ##                                                                            ##
 ################################################################################
-Jeffreys <- function(X1, X2, method = "KLIEP", verbose = FALSE, seed = 42) {
+Jeffreys <- function(X1, X2, fitting.method = "KLIEP", verbose = FALSE, seed = NULL) {
   if(!requireNamespace("densratio", quietly = TRUE)) {
     stop("Package \"densratio\" required for using method Jeffreys().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   dname <- c(deparse1(substitute(X1)), deparse1(substitute(X2)))
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")
@@ -19,8 +21,8 @@ Jeffreys <- function(X1, X2, method = "KLIEP", verbose = FALSE, seed = 42) {
   }
   new_x1 <- X1
   new_x2 <- X2
-  ratio_obj1 <- densratio::densratio(X1, X2, method = method, verbose = verbose)
-  ratio_obj2 <- densratio::densratio(X2, X1, method = method, verbose = verbose)
+  ratio_obj1 <- densratio::densratio(X1, X2, method = fitting.method, verbose = verbose)
+  ratio_obj2 <- densratio::densratio(X2, X1, method = fitting.method, verbose = verbose)
   hatR1 <- ratio_obj1$compute_density_ratio(new_x1)
   hatR2 <- ratio_obj2$compute_density_ratio(new_x2)
   

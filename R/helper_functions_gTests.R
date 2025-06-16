@@ -102,11 +102,13 @@ prettyResultgTestCat <- function(res, agg.type, n.perm, type, dname) {
 
 gTestWrapper <- function(X1, X2, dist.fun = stats::dist, graph.fun = MST, 
                          n.perm = 0, dist.args = NULL, graph.args = NULL, type,
-                         seed = 42, ...) {
+                         seed = NULL, ...) {
   if(!requireNamespace("gTests", quietly = TRUE)) {
     stop("Package \"gTests\" required for using method CCS(), CF(), FR(), and ZC().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   stopifnot(n.perm >= 0)
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")
@@ -128,11 +130,13 @@ gTestWrapper <- function(X1, X2, dist.fun = stats::dist, graph.fun = MST,
 }
 
 gTestWrapperCat <- function(X1, X2, dist.fun, agg.type, graph.type = "mstree", 
-                            K = 1, n.perm = 0, type, seed = 42, ...) {
+                            K = 1, n.perm = 0, type, seed = NULL, ...) {
   if(!requireNamespace("gTests", quietly = TRUE)) {
     stop("Package \"gTests\" required for using method CCS(), CF(), FR(), and ZC().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   stopifnot(K >= 1, n.perm >= 0, agg.type %in% c("a", "u"))
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")

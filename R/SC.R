@@ -3,11 +3,13 @@
 ##                                                                            ##
 ################################################################################
 SC <- function(X1, X2, ..., n.perm = 0, dist.fun = stats::dist, graph.fun = MST, 
-               dist.args = NULL, graph.args = NULL, type = "S", seed = 42) {
+               dist.args = NULL, graph.args = NULL, type = "S", seed = NULL) {
   if(!requireNamespace("gTestsMulti", quietly = TRUE)) {
     stop("Package \"gTestsMulti\" required for using method SC().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   type <- match.arg(type, c("S", "SA"))
   data.list <- c(list(X1, X2), list(...))
   if(any(!sapply(data.list, function(x) inherits(x, "matrix") | inherits(x, "data.frame")))) {

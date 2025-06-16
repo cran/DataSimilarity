@@ -2,13 +2,13 @@
 \alias{BMG}
 \encoding{UTF-8}
 \title{
-Biswas et al. (2014) two-sample run test
+Biswas et al. (2014) Two-sample Runs Test
 }
 \description{
-The function implements the \cite{Biswas, Mukhopadhyay and Gosh (2014)} distribution-free two-sample run test. This test uses a heuristic approach to calculate the shortest Hamilton path between the two datasets using the \code{HamiltonPath} function. By default the asymptotic version of the test is calculated.
+The function implements the \cite{Biswas, Mukhopadhyay and Gosh (2014)} distribution-free two-sample runs test. This test uses a heuristic approach to calculate the shortest Hamilton path between the two datasets using the \code{HamiltonPath} function. By default the asymptotic version of the test is calculated.
 }
 \usage{
-BMG(X1, X2, seed = 42, asymptotic = TRUE)
+BMG(X1, X2, seed = NULL, asymptotic = TRUE)
 }
 \arguments{
   \item{X1}{
@@ -18,7 +18,7 @@ First dataset as matrix or data.frame
 Second dataset as matrix or data.frame
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
   \item{asymptotic}{
 Should the asymptotic version of the test be performed (default: \code{TRUE})
@@ -62,6 +62,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{HamiltonPath}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

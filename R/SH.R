@@ -7,8 +7,10 @@ checkEdgeInE <- function(e, E) {
 }
 
 SH <- function(X1, X2, K = 1, graph.fun = knn.bf, dist.fun = stats::dist,
-               n.perm = 0, dist.args = NULL, seed = 42) {
-  set.seed(seed)
+               n.perm = 0, dist.args = NULL, seed = NULL) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   stopifnot(n.perm >= 0)
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {
     stop("X1 must be provided as a data.frame or matrix.")

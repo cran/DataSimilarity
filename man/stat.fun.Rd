@@ -46,6 +46,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{DiProPerm}}
 }
 \examples{
+set.seed(1234)
 # Just for demonstration calculate univariate two-sample statistics separately
 x1 <- rnorm(100)
 x2 <- rnorm(100, mean = 0.5)
@@ -56,6 +57,7 @@ if(requireNamespace("pROC", quietly = TRUE)) {
 }
 
 # Draw some multivariate data for the DiProPerm test
+set.seed(1234)
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)
 # Perform DiProPerm test 

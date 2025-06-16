@@ -9,7 +9,7 @@ Performs the Direction-Projection-Permutation (DiProPerm) two-sample test for hi
 }
 \usage{
 DiProPerm(X1, X2, n.perm = 0, dipro.fun = dwdProj, stat.fun = MD, 
-            direction = "two.sided", seed = 42)
+            direction = "two.sided", seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -36,7 +36,7 @@ Character indicating for which values of the univariate test statistic the test 
 Possible options are \code{"two.sided"} (reject both for low and high values, appropriate for \code{MD} and \code{tStat}), \code{"greater"} (reject for high values, appropriate for \code{AUC}), or \code{"smaller"} (reject for low values).
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -82,6 +82,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{stat.fun}}, \code{\link{dipro.fun}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

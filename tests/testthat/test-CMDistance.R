@@ -92,9 +92,12 @@ testCMDistance <- function(n.iter) {
     
     testthat::test_that("output values", {
       # check test statistic values
-      testthat::expect_equal(binary$statistic, res.calc.everything$statistic)
-      testthat::expect_equal(binary$statistic, res.pre.calc.cov$statistic * sqrt(2))
-      testthat::expect_equal(binary$statistic, res.pre.calc.right.cov$statistic)
+      testthat::expect_equal(binary$statistic, res.calc.everything$statistic,
+                             check.attributes = FALSE)
+      testthat::expect_equal(binary$statistic, res.pre.calc.cov$statistic * sqrt(2),
+                             check.attributes = FALSE)
+      testthat::expect_equal(binary$statistic, res.pre.calc.right.cov$statistic,
+                             check.attributes = FALSE)
       testthat::expect_equal(binary$cov.S, res.calc.everything$cov.S,
                              check.attributes = FALSE)
       testthat::expect_equal(binary$cov.S, res.pre.calc.cov$cov.S / 2, 

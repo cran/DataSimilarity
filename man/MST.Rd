@@ -29,6 +29,7 @@ Object of class \code{neig}.
 \code{\link{CCS}}, \code{\link{CF}}, \code{\link{FR}}, \code{\link{ZC}}
 }
 \examples{
+set.seed(1234)
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)
 dists <- stats::dist(rbind(X1, X2))

@@ -8,7 +8,7 @@ Engineer Metric
 The function implements the \eqn{L_q}-engineer metric for comparing two multivariate distributions.
 }
 \usage{
-engineerMetric(X1, X2, type = "F", seed = 42)
+engineerMetric(X1, X2, type = "F", seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -21,7 +21,7 @@ Second dataset as matrix or data.frame
 Character specifying the type of \eqn{L_q}-norm to use. Reasonable options are \code{"O"}, \code{"o"}, \code{"1"}, for the \eqn{L_1}-norm, \code{"I"}, and \code{"i"}, for the \eqn{L_\infty}-norm, and \code{"F"}, \code{"f"}, \code{"E"}, \code{"e"} (the default) for the \eqn{L_2}-norm (Euclidean norm). 
 }
   \item{seed}{
-Random seed (default: 42). Method is deterministic, seed is only set for consistency with other methods.
+Random seed (default: NULL). A random seed will only be set if one is provided. Method is deterministic, seed is only set for consistency with other methods.
 }
 }
 \details{
@@ -60,6 +60,7 @@ The seed argument is only included for consistency with other methods. The resul
 \code{\link{Jeffreys}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

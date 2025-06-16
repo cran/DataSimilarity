@@ -28,8 +28,8 @@
 
 \newcommand{\dif}{\mathop{}\!\mathrm{d}}
 
-%\VignetteIndexEntry{Using DataSimilarity}
-%\VignetteDepends{rpart.plot, RSNNS, knitr}
+%\VignetteIndexEntry{Details on methods and implementations}
+%\VignetteDepends{rpart.plot, nnet, knitr}
 
 %% For Sweave-based articles about R packages:
 %% need no \usepackage{Sweave}
@@ -57,7 +57,8 @@ library("knitr")
 Quantifying the similarity of two or more datasets is a common task in many applications in statistics and machine learning, such as two- or $k$-sample testing and meta- or transfer learning.
 The \pkg{DataSimilarity} package contains a variety of methods for quantifying the similarity of datasets.
 The package includes 36 methods of which 14 are implemented for the first time in \proglang{R}. 
-The remaining are wrapper functions for methods with already existing implementations that unify and simplify the various in- and output formats of different methods and bundle the methods of many existing \proglang{R} packages in a single package.
+The remaining are wrapper functions for methods with already existing implementations that unify and simplify the various input and output formats of different methods and bundle the methods of many existing \proglang{R} packages in a single package.
+Here, we give details on the methods and implementations and show some application examples.
 }
 
 \Keywords{dataset similarity, two-sample testing, multi-sample testing}
@@ -125,14 +126,14 @@ Previously, in a comprehensive literature review \citep{stolte_methods_2024}, 11
 \item Testing approaches.
 \end{enumerate}
 Moreover, the methods were compared with respect to 22 criteria judging their applicability, interpretability, and theoretical properties. 
-The \pkg{DataSimilarity} package comprises of 36 methods that fulfill at least one of the following properties:
+The \pkg{DataSimilarity} package comprises 36 methods that fulfill at least one of the following properties:
 \begin{enumerate}
 \item The method is implemented in \proglang{R}.
-\item The method is one of the top methods ordered by the highest number of fulfilled criteria, and fulfills at least 11 criteria of the 20 criteria excluding the consistency criteria.
-\item The method is the best in its subclass in the theoretical comparison and no other method from this subclass was chosen based on the first two criteria.
+\item The method is one of the top methods ordered by the highest number of fulfilled criteria, and fulfills at least 11 criteria of the 20 criteria, excluding the consistency criteria.
+\item The method is the best in its subclass in the theoretical comparison, and no other method from this subclass was chosen based on the first two criteria.
 \end{enumerate}
-To avoid preferring methods that define a test over methods that do not and therefore can by definition not fulfill the consistency criteria, consistency is not counted for determining the top methods. 
-We chose 11 as the cutoff for the number of fulfilled criteria as this is the range where the implemented methods typically lie and it ensures that at least more than half of the criteria are fulfilled. 
+To avoid preferring methods that define a test over methods that do not, and therefore can by definition not fulfill the consistency criteria, consistency is not counted for determining the top methods. 
+We chose 11 as the cutoff for the number of fulfilled criteria, as this is the range where the implemented methods typically lie, and it ensures that at least more than half of the criteria are fulfilled. 
 
 \subsection{Definition of example methods}\label{sec:ex-meth}
 In the following, we differentiate six cases with regard to the applicability of the selected methods. 
@@ -167,7 +168,7 @@ Most graph-based methods work by constructing a similarity graph on the pooled s
 Here, the optimal non-bipartite matching is used, i.e., a graph where pairs of two observations in the pooled sample are connected such that the sum over the edge lengths (= Euclidean distances of connected observations) is minimized. 
 The optimal non-bipartite matching for two example data situations is shown in Figure~\ref{fig:ex.CM}.
 In case of an odd number of observations, a ghost observation is introduced that has the highest distance to all other observations. 
-The observation that is matched with that ghost observation is discarded from the further analysis. 
+The observation that is matched with that ghost observation is discarded from further analysis. 
 
 The test statistic of the cross-match test is given by the standardized cross-match count
 \[
@@ -179,7 +180,7 @@ The exact distribution of the test statistic under $H_0$ is known. For small sam
 For large samples, the asymptotic standard normal distribution of the test statistic can be used. 
 The idea of the test is that for similar datasets, the number of edges connecting points from different samples is expected to be higher than in datasets that differ. 
 This is illustrated in Figure~\ref{fig:CM.sim} compared to Figure~\ref{fig:CM.dis}. 
-In case of data drawn from different datasets, less edges connect points from different datasets indicated by the lower number of red edges in Figure~\ref{fig:CM.dis}. 
+In case of data drawn from different datasets, fewer edges connect points from different datasets, indicated by the lower number of red edges in Figure~\ref{fig:CM.dis}. 
 
 \begin{figure}[t!]
 \centering
@@ -248,7 +249,7 @@ par(op)
 @
 \caption{Datasets drawn from different distributions.}\label{fig:CM.dis}
 \end{subfigure}
-\caption{Optimal non-bipartite matching for example datasets. Dataset~1 is indicated by white points and Dataset~2 by black points. Edges connecting points from different datasets are indicated by red and dashed lines Edges connecting points from the same sample are indicated by grey and solid lines.}
+\caption{Optimal non-bipartite matching for example datasets. Dataset~1 is indicated by white points and Dataset~2 by black points. Edges connecting points from different datasets are indicated by red and dashed lines. Edges connecting points from the same sample are indicated by grey and solid lines.}
 \label{fig:ex.CM}
 \end{figure}
 
@@ -262,7 +263,7 @@ The test statistic then is the Mahalanobis distance of the observed cross-counts
 The expectation and covariance matrix of the cross-count vector $A$ under $H_0$ can be calculated analytically and depend only on the sample sizes $n_i, i = 1,\dots,k$. 
 Small values of the multi-sample Mahalanobis cross-match (MMCM) statistic indicate similarity. 
 However, as there is no known upperbound, it is hard to interpret the MMCM value. 
-The MMCM statistic follows a $\chi^2_{\binom{k}{2}}$ distribution asymptotically under the null which can be used for testing. 
+The MMCM statistic follows a $\chi^2_{\binom{k}{2}}$ distribution asymptotically under the null, which can be used for testing. 
 
 \subsubsection{3. Methods applicable to exactly two numeric datasets with target variables}
 \citet{ntoutsi_general_2008} propose measuring dataset similarity based on probability density estimates derived from decision trees.
@@ -278,10 +279,10 @@ Let $n_r$ denote the number of segments in the joint partition and $n_c$ the num
 $\hat{P}_D(\mathcal{X}) \in \mathbb{R}^{n_r}$ uses the proportion of observations in $D$ that fall into each segment of the joint partition. 
 This means that for each of the $n_r$ segments of the partition, the number of observations from dataset $D$ that fall into that segment is counted and divided by the total number of observations in $D$.
 For the estimation of the joint density $P_D(Y,\mathcal{X})$, the proportion of observations that fall into each segment of the joint partition and belong to each class is determined, $\hat{P}_D(Y, \mathcal{X}) \in \mathbb{R}^{n_r \times n_c}$.
-Here, for each of the $n_r$ segments of the partition and for each of the $n_c$ classes, the number of observations in $D$ where the corresponding target variable has the respective class value and that fall into the respective segment is counted and divided by the total number of observations in $D$.
+Here, for each of the $n_r$ segments of the partition and each of the $n_c$ classes, the number of observations in $D$ where the corresponding target variable has the respective class value and that fall into the respective segment is counted and divided by the total number of observations in $D$.
 The conditional density $P_D(Y|\mathcal{X})$ is estimated by calculating the proportion of observations belonging to each class separately for each segment, 
 $\hat{P}_D(Y|\mathcal{X}) \in \mathbb{R}^{n_r \times n_c}$.
-Here, for each of the $n_r$ segments of the partition and for each of the $n_c$ classes, the number of observations in $D$ where the corresponding target variable has the respective class value and that fall into the respective segment is counted and divided by the total number of observations in $D$ that fall into the respective segment.
+Here, for each of the $n_r$ segments of the partition and each of the $n_c$ classes, the number of observations in $D$ where the corresponding target variable has the respective class value and that fall into the respective segment is counted and divided by the total number of observations in $D$ that fall into the respective segment.
 
 \begin{figure}[t!]
 \centering
@@ -366,7 +367,7 @@ par(mar = c(4.1, 4.1, 1.1, 2.1))
 plotParti(intersec.parti$parti)
 par(op)
 @
-\caption{Intersected partition (greatest common refinement, GCR) from fitted trees for Datasets~1 and~2. Each dataset includes two covariates and and a binary target variable.}
+\caption{Intersected partition (greatest common refinement, GCR) from fitted trees for Datasets~1 and~2. Each dataset includes two covariates and a binary target variable.}
 \label{fig:sec.parti}
 \end{subfigure}
 \caption{Partitioning of sample space by fitting trees to two example datasets.}
@@ -398,9 +399,9 @@ For this, the pooled dataset has to be split into a training set on which the ra
 In the implementation, both datasets are split in half to create a training and a test dataset. 
 Alternatively, an out-of-bag (OOB) based permutation test can be performed that does not require data splitting. 
 OOB statistics can be used to increase the sample efficiency compared to the test based on a holdout sample. 
-Both the OOB based test and the asymptotic version of the test are implemented.
+Both the OOB-based test and the asymptotic version of the test are implemented.
 The test statistic is either the mean of the per-class OOB or test classification errors or the overall OOB or test classification error, respectively.
-In the asymptotic case, a binomial test is performed in case of the overall classification error or a $Z$ test is performed in case of the mean per-class classification error. 
+In the asymptotic case, a binomial test is performed in case of the overall classification error, or a $Z$ test is performed in case of the mean per-class classification error. 
 Otherwise, a permutation test is performed.
 The variable importance measures of the random forest can provide additional insights into sources of distributional differences. 
 
@@ -409,7 +410,7 @@ The general idea of \citet{lopez-paz_revisiting_2017} is to use a classifier to 
 The \textit{classifier two-sample test (C2ST)} uses the classification accuracy of this classifier as its test statistic. \\
 The C2ST consists of five steps: 
 \begin{enumerate}
-\item Construct the dataset consisting of the samples from all datasets labeled with their membership to each of the datasets.
+\item Construct the dataset consisting of the samples from all datasets, labeled with their membership to each of the datasets.
 \item Assign the observations of the dataset constructed in 1.\ randomly to a training and test set.
 \item Train a classifier that predicts for an observation to which dataset $X^{(j)}, j = 1,\dots,k$ it belongs.
 \item Calculate the C2ST statistic, which is the accuracy on the test set. The accuracy should be close to the chance level for $F_1 = \dots = F_k$, and it should be greater than the chance level for $\exists i\ne j\in\{1,\dots,k\}: F_i \ne F_j$ since in the latter case the classifier should identify distributional differences between the samples.
@@ -418,9 +419,9 @@ The C2ST consists of five steps:
 Maximizing the power of a C2ST is a trade-off between using a large training set to optimize the classifier and a large test set to better evaluate the performance of the classifier. \\
 The test statistic is interpretable as the percentage of samples that are correctly classified on the unseen test data. 
 The above-mentioned test of \citet{hediger_use_2021} can be seen as a special case of the general framework proposed by \citet{lopez-paz_revisiting_2017}. 
-One difference in the implementation of the tests is that for the C2ST, categorical data is dummy coded while for the test of \citet{hediger_use_2021} the categorical variables are passed to \fct{ranger::ranger} directly. 
-Moreover, the use of OOB predictions and feature importance is specific to the random forest based test and cannot be used for all of the available classifiers for the C2ST.
-Further, the C2ST uses the accuracy as test statistic while the test of \citet{hediger_use_2021} uses the classification error, i.e., $1 - \text{accuracy}$. 
+One difference in the implementation of the tests is that for the C2ST, categorical data is dummy-encoded, while for the test of \citet{hediger_use_2021} the categorical variables are passed to \fct{ranger::ranger} directly. 
+Moreover, the use of OOB predictions and feature importance is specific to the random forest-based test and cannot be used for all of the available classifiers for the C2ST.
+Further, the C2ST uses the accuracy as its test statistic while the test of \citet{hediger_use_2021} uses the classification error, i.e., $1 - \text{accuracy}$. 
 
 \subsubsection{6. Methods applicable to exactly two categorical datasets with target variables}
 \citet{alvarez-melis_geometric_2020} define a distance based on optimal transport between datasets that include a target (class) variable $Y$. 
@@ -438,8 +439,8 @@ d_{\mathcal{Z}}(z, z^\prime) := (d_{\mathcal{X}}(x, x^{\prime})^q + W_{q^\prime}
 defines a distance of two points $z^{\top} = (x^{\top}, y)$, and ${z^\prime}^{\top} = ({x^\prime}^{\top}, y^\prime)$ in the pooled sample.
 $d_{\mathcal{X}}$ defines a distance on the covariate space, e.g., the Euclidean distance, and  $W_{q^\prime}(\alpha_y, \alpha_{y^{\prime}})$ is the $q^\prime$-Wasserstein distance of the distribution of the subset of covariate data with corresponding response value $y$ and the distribution of the subset of covariate data with corresponding response value $y^\prime$. 
 The powers $q$ and $q^\prime$ have to be chosen in advance to calculate the OTDD.
-The optimal transport problem can intuitively be motivated by imagining each probability densities as a pile of dirt. 
-Then, the cost function corresponds to the cost for transporting the dirt from one point to another which is proportional to the distance of the two points. 
+The optimal transport problem can intuitively be motivated by imagining each probability density as a pile of dirt. 
+Then, the cost function corresponds to the cost for transporting the dirt from one point to another, which is proportional to the distance between the two points. 
 The optimal transport then corresponds to the lowest cost required for moving one pile of dirt fully to the shape and location of the other. 
 Therefore, distributions can be regarded as more similar if the optimal transport between them is lower. 
 For an intuitive explanation and visualization of the OTDD, also refer to 
@@ -450,10 +451,10 @@ For an intuitive explanation and visualization of the OTDD, also refer to
 Where possible, existing implementations are used.
 If methods already have a name in the article where they were proposed or in the secondary literature, the corresponding functions are named after that, e.g., \fct{Wasserstein} for the Wasserstein distance, \fct{MMD} for the maximum mean discrepancy (MMD), or \fct{CMDistance} for the constrained minimum (CM) distance. 
 Otherwise, the function names are composed of the first letters of the surnames of all authors of the article where the respective method was originally proposed, e.g., \fct{FR} for the Friedman-Rafsky test proposed by \citet{friedman_multivariate_1979}, or the full surname in case of a single author, e.g., \fct{Bahr} for the test proposed by \citet{bahr_ein_1996}. 
-The in- and output of the methods from different existing packages and of the newly implemented methods are unified.  
-To achieve this, for some existing methods it was sufficient to implement a wrapper calling the original function. 
+The input and output of the methods from different existing packages and of the newly implemented methods are unified.  
+To achieve this, for some existing methods, it was sufficient to implement a wrapper calling the original function. 
 
-In other cases, we re-implemented the method from scratch if the \proglang{R} package was archived and additional issues with the original implementation occured. 
+In other cases, we re-implemented the method from scratch if the \proglang{R} package was archived and additional issues with the original implementation occurred. 
 This was the case for the Di\-Pro\-Perm test \citep{wei_direction-projection-permutation_2016} for which the original implementation in the \pkg{diproperm} package \citep{diproperm} yields non-reproducible results.
 Moreover, the implementations of the multi-sample cross-match test of \citet{petrie_graph-theoretic_2016} and the previously mentioned multi-sample Mahalanobis cross-match test (MMCM) of \citet{mukherjee_distribution-free_2022} in the \pkg{multicross} package \citep{multicross} could not be used due to the output format that made it impossible to access the test statistic and $p$~value.
 More details on the new implementations compared to the aforementioned versions can be found in Section~\ref{app:technical}.
@@ -481,16 +482,16 @@ Therefore, the new functions perform exactly one test and return only the result
 Some of the former implementations used to perform multiple tests based on the same metrics or always returned the asymptotic $p$~value in addition to a permutation $p$~value.
 This could lead to unscientific practices like choosing the test based on the desired result. 
 As an exception, for implementations that output multiple related tests, we offer wrapper functions that also perform these multiple tests. Often, conducting them at once is computationally faster than performing each test individually when large parts of the calculation are the same. 
-This option might be useful in certain situations where multiple tests need to be applied to the same data, e.g. when performing method comparison studies. 
+This option might be useful in certain situations where multiple tests need to be applied to the same data, e.g., when performing method comparison studies. 
 We do not advise applying multiple tests for the same hypothesis on the same datasets when conducting inference for a specific real-life application.
 
-Some of the existing implementations already include setting a random seed and some do not.
+Some of the existing implementations already include setting a random seed, and some do not.
 Therefore, for unity, the new methods all include a random seed argument and set the random seed to the supplied value for reproducibility. 
 
 
 \section{Illustrations} \label{sec:illustration}
 In the following, the example methods for the six cases from Section~\ref{sec:ex-meth} are applied to some real-world datasets. 
-These are typically subsets of a dataset defined in such a way that from the application background, it is clear that the subsets should or should not differ. 
+These are typically subsets of a dataset defined in such a way that, from the application background, it is clear that the subsets should or should not differ. 
 The datasets were selected from the datasets included in the \proglang{R} packages that the \pkg{DataSimilarity} package depends on, so no additional packages are needed. 
 To apply all the methods, we simply need to load the \pkg{DataSimilarity} package. 
 %
@@ -501,14 +502,14 @@ library("DataSimilarity")
 \subsection{Exactly two numeric datasets without target variables}
 The dataset \code{dhfr} \citep{sutherland_three-dimensional_2004} from the \pkg{caret} package \citep{caret} is a binary classification dataset (regarding Dihydrofolate Reductase inhibition) consisting of 325 compounds of which 203 are labeled as `active' and 122 as `inactive'. 
 The variables are 228 molecular descriptors.
-As the active and inactive compounds should differ in their descriptors we divide the dataset according to the first variable that indicates the activity status. 
+As the active and inactive compounds should differ in their descriptors, we divide the dataset according to the first variable that indicates the activity status. 
 <<preparedhfr, echo = TRUE, cache = TRUE>>=
 data(dhfr, package = "caret")
 act <- dhfr[dhfr$Y == "active", -1]
 inact <- dhfr[dhfr$Y == "inactive", -1]
 @
 We apply the Rosenbaum cross-match test to check whether the active and inactive compounds differ. 
-As the combined sample size is smaller than 340 we can apply the exact test: 
+As the combined sample size is smaller than 340, we can apply the exact test: 
 %
 <<exRosenbaum, echo = FALSE, cache = TRUE, tidy = TRUE>>=
 res.Rosenbaum <- Rosenbaum(act, inact, exact = TRUE)
@@ -520,14 +521,22 @@ Rosenbaum(act, inact, exact = TRUE)
 print(res.Rosenbaum)
 @
 %
+Alternatively, we can always use the \fct{DataSimilarity} function: 
+<<exRosenbaumDS1, echo = TRUE, eval = FALSE, cache = TRUE, tidy = TRUE>>=
+DataSimilarity(act, inact, method = "Rosenbaum", exact = TRUE)
+@
+<<exRosenbaumDS2, echo = FALSE, cache = TRUE, tidy = TRUE>>=
+print(res.Rosenbaum)
+@
+%
 The cross-match count is equal to \Sexpr{res.Rosenbaum$estimate}. 
-At most there could be $122$ cross-matches if each observation from the `inactive' dataset was connected to an observation in the `active' dataset. 
+At most, there could be $122$ cross-matches if each observation from the `inactive' dataset was connected to an observation in the `active' dataset. 
 Therefore, the cross-match count of $20$ can be considered a rather small value. 
 This is also reflected by the $z$ score of \Sexpr{round(res.Rosenbaum$statistic, 2)}. %\Sexpr{round(res.Rosenbaum$statistic, 2)}
 Consequently, we see that the hypothesis of equal distributions can be rejected with a $p$~value smaller than $2.2\cdot 10^{-16}$. 
 
-We obtain a warning that informs that a ghost value was introduced when calculating the optimal non-bipartite matching, due to the odd pooled sample size.
-This means that an artificial point was added to the sample that has the highest distance to all other points in the sample such that the optimal non-bipartite matching which needs an even sample size could be calculated. 
+We obtain a warning that informs us that a ghost value was introduced when calculating the optimal non-bipartite matching, due to the odd pooled sample size.
+This means that an artificial point was added to the sample that has the highest distance to all other points in the sample, such that the optimal non-bipartite matching, which needs an even sample size, could be calculated. 
 The ghost value and the point with which it was matched are then discarded from the subsequent calculations.
 
 \subsection{More than two numeric datasets without target variables}
@@ -541,10 +550,15 @@ versicolor <- iris[iris$Species == "versicolor", -5]
 virginica <- iris[iris$Species == "virginica", -5]
 @
 %
-For camparing the three datasets, we use the \citet{mukherjee_distribution-free_2022} Mahalanobis multisample crossmatch (MMCM) test for the three datasets.
+For comparing the three datasets, we use the \citet{mukherjee_distribution-free_2022} Mahalanobis multisample crossmatch (MMCM) test for the three datasets.
 %
 <<exMMCM, echo = TRUE, cache = TRUE>>=
 MMCM(setosa, versicolor, virginica)
+@
+%
+Alternatively, we can always use the \fct{DataSimilarity} function: 
+<<exMMCMDS, echo = TRUE, cache = TRUE>>=
+DataSimilarity(setosa, versicolor, virginica, method = "MMCM")
 @
 %
 The MMCM statistic value on its own is hard to interpret. 
@@ -557,7 +571,7 @@ The \code{segmentationData} dataset \citep{hill_impact_2007} in the \pkg{caret} 
 The dataset contains 119 imaging measurements of 2019 cells to predict the segmentation that is divided into the two classes \code{PS} for `poorly segmented' and \code{WS} for `well segmented'. 
 Moreover, there is a division into 1009 observations used for training and 1010 observations used as a test set. 
 We compare this training and test set. 
-Ideally, the distributions of the training and test set should be equal. 
+Ideally, the distributions of the training and test sets should be equal. 
 %
 <<preparesegmentationData, echo = TRUE, cache = TRUE, tidy = TRUE>>=
 data(segmentationData, package = "caret")
@@ -565,18 +579,29 @@ test <- segmentationData[segmentationData$Case == "Test", -(1:2)]
 train <- segmentationData[segmentationData$Case == "Train", -(1:2)]
 @
 %
-To check the similarity of the training and test set we apply the method of \citet{ntoutsi_general_2008}.
+To check the similarity of the training and test sets, we apply the method of \citet{ntoutsi_general_2008}.
 For demonstration, we use all three proposed similarity measures NTO1, NTO2, and NTO3.
 In all cases, we do not tune the decision trees that are used to define the partitions.
-The \code{target1} and \code{target2} argument have to be specified as the column names of the target variable in the first and second supplied dataset, respectively.
+The \code{target1} and \code{target2} arguments have to be specified as the column names of the target variable in the first and second supplied dataset, respectively.
 Here, the target variable is named \code{"Class"} in both cases.
 %
 <<exNKT, echo = TRUE, cache = TRUE>>=
 NKT(train, test, target1 = "Class", target2 = "Class", tune = FALSE)
 NKT(train, test, target1 = "Class", target2 = "Class", tune = FALSE, 
-    method = 2)
+    version = 2)
 NKT(train, test, target1 = "Class", target2 = "Class", tune = FALSE,
-    method = 3)
+    version = 3)
+@
+%
+Alternatively, we can always use the \fct{DataSimilarity} function: 
+%
+<<exNKTDS, echo = TRUE, cache = TRUE>>=
+DataSimilarity(train, test, method = "NKT", target1 = "Class",
+               target2 = "Class",  tune = FALSE)
+DataSimilarity(train, test, method = "NKT", target1 = "Class", 
+               target2 = "Class", tune = FALSE, version = 2)
+DataSimilarity(train, test, method = "NKT", target1 = "Class",
+               target2 = "Class", tune = FALSE, version = 3)
 @
 %
 We observe high similarity between the training and test datasets with all three methods, reflected by the similarity values \code{s} that are all close to the maximal value $1$. 
@@ -595,7 +620,7 @@ no.card <- banque[banque$cableue == "non", -7]
 @
 %
 We use the random forest test of \citet{hediger_use_2021} to compare these two groups. 
-For easier interpretation we look at the overall out-of-bag (OOB) prediction error instead of the per class OOB prediction error.
+For easier interpretation, we look at the overall out-of-bag (OOB) prediction error instead of the per-class OOB prediction error.
 %
 <<exHMN, echo = FALSE, cache = TRUE>>=
 # HMN.res <- HMN(card, no.card, n.perm = 1000, statistic = "OverallOOB") 
@@ -609,13 +634,22 @@ HMN(card, no.card, n.perm = 1000, statistic = "OverallOOB")
 print(HMN.res)
 @
 %
-The overall OOB prediction error is \Sexpr{round(HMN.res$statistic, 3)} which is considerably smaller than the naive prediction error of $243/810 = 0.3$. 
-Therefore, the random forest is able to distinguish between the datasets, so we can conclude that the datasets differ.
+Alternatively, we can always use the \fct{DataSimilarity} function: 
+<<exHMNDS1, echo = TRUE, eval = FALSE, cache = TRUE>>=
+DataSimilarity(card, no.card, method = "HMN", n.perm = 1000, 
+               statistic = "OverallOOB") 
+@
+<<exHMNDS2, echo = FALSE, cache = TRUE>>=
+print(HMN.res)
+@
+%
+The overall OOB prediction error is \Sexpr{round(HMN.res$statistic, 3)}, which is considerably smaller than the naive prediction error of $243/810 = 0.3$. 
+Therefore, the random forest can distinguish between the datasets, so we can conclude that the datasets differ.
 This is also reflected by the $p$~value of \Sexpr{sprintf("%.3e", HMN.res$p.value)}. 
 
 \subsection{More than two categorical datasets without target variables} 
 We consider the \code{banque} dataset from the \pkg{ade4} package \citep{ade4} again. 
-This time we split it by the nine socio-professional categories given by `csp'.
+This time, we split it into the nine socio-professional categories given by `csp'.
 %
 <<preparebanque2, echo = TRUE, cache = TRUE>>=
 data(banque, package = "ade4")
@@ -644,26 +678,37 @@ C2ST(agric, artis, cadsu, inter, emplo, ouvri, retra, inact, etudi)
 print(C2ST.res)
 @
 %
+Alternatively, we can always use the \fct{DataSimilarity} function: 
+<<exC2STKNNDS1, echo = TRUE, eval = TRUE, cache = TRUE>>=
+DataSimilarity(agric, artis, cadsu, inter, emplo, ouvri, retra, inact, 
+               etudi, method = "C2ST")
+@
 The accuracy of the $K$-NN classifier is \Sexpr{round(C2ST.res$statistic, 3)}. 
 It is larger than the naive accuracy for always predicting the largest class, which is given by \code{prob = \Sexpr{round(C2ST.res$parameter[2], 3)}} in the output. 
-The classifier seems to be able to distinguish between the datasets and we can therefore regard them as dissimilar. 
+The classifier seems to be able to distinguish between the datasets, and we can therefore regard them as dissimilar. 
 Moreover, the null hypothesis of equal distributions can be rejected with a $p$~value of \Sexpr{sprintf("%.3e", C2ST.res$p.value)}. 
 
-For demonstration, we additionally perform the C2ST with a multilayer perceptron classifier. 
+For demonstration, we additionally perform the C2ST with a neural net classifier. 
 %
 <<exC2STMLP, echo = TRUE, cache = TRUE>>=
 C2ST(agric, artis, cadsu, inter, emplo, ouvri, retra, inact, etudi, 
-     method = "mlp")
+     classifier = "nnet", train.args = list(trace = FALSE))
 @
 %
+Alternatively, we can always use the \fct{DataSimilarity} function: 
+<<exC2STMLPDS, echo = TRUE, eval = TRUE, cache = TRUE>>=
+DataSimilarity(agric, artis, cadsu, inter, emplo, ouvri, retra, inact, 
+               etudi, method = "C2ST", classifier = "nnet", 
+               train.args = list(trace = FALSE))
+@
 The results are very similar to using $K$-NN. 
 
 \subsection{Exactly two categorical datasets with target variables} % OTDD
 We consider the \code{banque} dataset from the \pkg{ade4} package \citep{ade4} again. 
-In this case, we interpret the savings bank amount (\code{eparliv}) variable as the target variable, which is again supplied via the \code{target1} and \code{target2} argument. 
+In this case, we interpret the savings bank amount (\code{eparliv}) variable as the target variable, which is again supplied via the \code{target1} and \code{target2} arguments. 
 It is divided into the three categories `$> 20000$', `$> 0 $ and $ <20000$', and `nulle'.
 We divide the data into the socio-professional categories as before. 
-We use the optimal transport dataset distance (OTDD) to compare the resulting datasets for craftsmen, shopkeepers, company directors (`artis') to that of higher intellectual professions (`cadsu') and to that of manual workers (`ouvri'). 
+We use the optimal transport dataset distance (OTDD) to compare the resulting datasets for craftsmen, shopkeepers, company directors (`artis'), to that of higher intellectual professions (`cadsu') and to that of manual workers (`ouvri'). 
 As all variables are categorical, we use the Hamming distance instead of the default Euclidean distance.
 %
 <<exOTDD, echo = FALSE, cache = TRUE>>=
@@ -682,8 +727,17 @@ OTDD(artis, cadsu, target1 = "eparliv", target2 = "eparliv",
 print(res.OTDD1)
 @
 %
+Alternatively, we can always use the \fct{DataSimilarity} function: 
+<<exOTDDDS1, echo = TRUE, eval = FALSE, cache = TRUE>>=
+DataSimilarity(artis, cadsu, method = "OTDD", target1 = "eparliv", 
+               target2 = "eparliv", feature.cost = hammingDist) 
+@
+<<exOTDDDS2, echo = FALSE, cache = TRUE>>=
+print(res.OTDD1)
+@
+%
 We obtain a dataset distance of \Sexpr{round(res.OTDD1$statistic, 3)} between craftsmen/shopkeepers/company directors and executives/higher intellectual professions.
-For the OTDD, low values correspond to high similarity and the minimum value is 0. 
+For the OTDD, low values correspond to high similarity, and the minimum value is 0. 
 The observed value is clearly larger than zero, so the datasets are not exactly similar. 
 How dissimilar they are is however hard to interpret from the observed OTDD value on its own.
 For the OTDD, no test is proposed and therefore, no $p$~value is calculated. 
@@ -692,6 +746,14 @@ OTDD(artis, ouvri, target1 = "eparliv", target2 = "eparliv",
      feature.cost = hammingDist) 
 @
 <<exOTDD4, echo = FALSE, cache = TRUE>>=
+print(res.OTDD2)
+@
+Alternatively, we can always use the \fct{DataSimilarity} function: 
+<<exOTDDDS3, echo = TRUE, eval = FALSE, cache = TRUE>>=
+DataSimilarity(artis, ouvri, method = "OTDD", target1 = "eparliv", 
+               target2 = "eparliv", feature.cost = hammingDist) 
+@
+<<exOTDDDS4, echo = FALSE, cache = TRUE>>=
 print(res.OTDD2)
 @
 We obtain a dataset distance of \Sexpr{round(res.OTDD2$statistic, 3)} between craftsmen/shopkeepers/company directors and manual workers.
@@ -703,10 +765,10 @@ However, we can compare the values and conclude that the data of craftsmen/shopk
 Table \ref{tab:wrapper} gives an overview of all wrapper functions included in the package. 
 For each method, the original implementation, the new function name, and the applicability to data with a target variable, numerical data, categorical data, and multiple samples are given. 
 Note that the applicability statements refer to the specific implementation of the method.
-Some of the methods are in theory applicable to a broader range of data types than implemented. 
+Some of the methods are in theory applicable to a broader range of data types than are implemented. 
 Moreover, note that most implementations are only applicable to either numerical or categorical data except for the classifier-based methods \fct{HMN} and \fct{C2ST}, which can handle both data types simultaneously as long as the selected classifier can do so. 
-The \fct{MMD} implementation can also handle both data types but a matching kernel function has to be implemented.
-Note that the graph-based tests cannot deal with both numerical and categorical data due to ties even if a distance function that can handle both is supplied.
+The \fct{MMD} implementation can also handle both data types, but a matching kernel function has to be implemented.
+Note that the graph-based tests cannot deal with both numerical and categorical data due to ties, even if a distance function that can handle both is supplied.
 More details on the methods and their implementation can be found in Section~\ref{app:technical}.
 
 Table \ref{tab:new.funs} gives an overview of the newly implemented methods and their applicability. 
@@ -785,7 +847,7 @@ DiProPerm test \citep{wei_direction-projection-permutation_2016} & \fct{DiProPer
 \section{Implementation details} \label{app:technical}
 \subsection[KMD]{KMD \citep{huang_kernel_2022}}
 The \emph{kernel measure of multi-sample dissimilarity} (KMD) introduced by \citet{huang_kernel_2022} is a kernel-based test using the association between the variables and the sample membership to quantify the dissimilarity of multiple samples. 
-Denote the dataset membership of each point in the pooled sample $\{Z_1,\dots, Z_N\}$ by $\{\Delta_1,\dots, \Delta_N\}$. $\{(\Delta_i, Z_i)\}_{i=1}^N$ can be seen as an i.i.d.\ sample from $(\tilde{\Delta}, \tilde{Z})$ with distribution $\mu$ defined by $\text{P}(\tilde{\Delta} = i) = \pi_i, i = 1,\dots, M$ and $\tilde{Z}|\tilde{\Delta} = i \sim F_i$. 
+Denote the dataset membership of each point in the pooled sample $\{Z_1,\dots, Z_N\}$ by $\{\Delta_1,\dots, \Delta_N\}$. $\{(\Delta_i, Z_i)\}_{i=1}^N$ can be seen as an i.i.d.\ sample from $(\tilde{\Delta}, \tilde{Z})$ with distribution $\mu$ defined by $\text{P}(\tilde{\Delta} = i) = \pi_i, i = 1,\dots, k$ and $\tilde{Z}|\tilde{\Delta} = i \sim F_i$. 
 Let $(\tilde{Z}_1, \tilde{\Delta}_1), (\tilde{Z}_2, \tilde{\Delta}_2)$ be i.i.d.\ samples from $\mu$ and $(\tilde{Z}, \tilde{\Delta}), (\tilde{Z}, \tilde{\Delta}^{\prime}) \sim \mu$ with $\tilde{\Delta}, \tilde{\Delta}^{\prime}$ conditionally independent given $\tilde{Z}$.
 Denote by $K$ a kernel function over $\{1,\dots,k\}$, e.g., the discrete kernel $K(x, y) := \mathbbm{1}(x = y)$. 
 Then the KMD is defined as
@@ -817,7 +879,7 @@ as its test statistic. The expectation and variance under the null can be calcul
 \[
 T_{\text{CF}} = \left(R_1 - \E_{H_0}(R_1), R_2 - \E_{H_0}(R_2)\right)\COV^{-1}_{H_0}\left(\begin{pmatrix} R_1\\ R_2\end{pmatrix}\right) \begin{pmatrix} R_1 - \E_{H_0}(R_1)\\ R_2 - \E_{H_0}(R_2)\end{pmatrix}.
 \]
-\citet{chen_weighted_2018} found some problems with the original edge-count test for unequal sample sizes of the two datasets based on which they proposed the \emph{weighted edge-count test} using the weighted edge-counts
+\citet{chen_weighted_2018} found some problems with the original edge-count test for unequal sample sizes of the two datasets, based on which they proposed the \emph{weighted edge-count test} using the weighted edge-counts
 \[
 R_w = \frac{n_1}{N} R_1 + \frac{n_2}{N} R_2,
 \]
@@ -837,14 +899,14 @@ T_{\text{ZC}} = \max\left(\kappa \frac{R_{w} - \E_{H_0}(R_{w})}{\sqrt{\VAR_{H_0}
 where $\kappa$ is a constant that has to be chosen prior to performing the test.
 $\kappa\in\{1.31, 1.14, 1\}$ is recommended based on a small power simulation for normal data with shift or scale alternatives.\\
 Wrapper functions around \fct{g.tests} from the \pkg{gTests} package \citep{gTests} are implemented.
-These do not need a pre-calculated graph as input but allow to specify a distance function (\code{dist.fun}) and a function for calculating a similarity graph (\code{graph.fun}) and then calculate the similarity graph internally.
+These do not need a pre-calculated graph as input but allow specifying a distance function (\code{dist.fun}) and a function for calculating a similarity graph (\code{graph.fun}) and then calculating the similarity graph internally.
 The new input also includes both datasets.
 We find this more intuitive and less error-prone than supplying an edge matrix and two vectors of indices specifying the dataset membership as for the original \fct{g.tests} function.
-The new implementation forces the user to choose one of the tests first and then perform it instead of performing all tests at once.
+The new implementation forces the user to choose one of the tests first and then perform it, instead of performing all tests at once.
 Moreover, the users have to decide whether they want to perform the permutation test or the approximative test.
 
-For the Friedman-Rafsky test, there is an additional implementation in the \pkg{GSAR} package but there the test statistic is standardized by the empirical mean and standard deviation rather than the theoretical mean and standard deviation of the test statistic under the null hypothesis as proposed in the original article.
-Therefore we use the \pkg{gTests} implementation here. 
+For the Friedman-Rafsky test, there is an additional implementation in the \pkg{GSAR} package, but there the test statistic is standardized by the empirical mean and standard deviation rather than the theoretical mean and standard deviation of the test statistic under the null hypothesis as proposed in the original article.
+Therefore, we use the \pkg{gTests} implementation here. 
 
 \subsection[Edge-count tests for categorical data]{Edge-count tests for categorical data \citep{chen_graph-based_2013, zhang_graph-based_2019}}
 These methods are adaptations of the previously mentioned edge-count tests for categorical data. 
@@ -856,12 +918,12 @@ For this, the function \fct{getGraph} from the \pkg{gTests} package is used.
 Therefore, the choice of the similarity graph is restricted to the $K$-nearest neighbors and the $K$-MST.
 Still, a distance function can be supplied.
 By default, this is the sum of unequal classes.
-The calculation of the frequency table of all observations and the similarity graph on this are performed internally, thus again only the datasets have to be supplied by the user.
+The calculation of the frequency table of all observations and the similarity graph on this are performed internally; thus, again, only the datasets have to be supplied by the user.
 Moreover, the method for aggregating the graphs has to be supplied.
 Possible options are averaging (\code{``a''}) and union (\code{``u''}) over graphs.
 
 \subsection[Cross-match test]{Cross-match test \citep{rosenbaum_exact_2005}}
-The Rosenbaum cross-match test uses a similar approach as the Friedman-Rafsky test but based on the optimal non-bipartite matching instead of the MST as a similarity graph (see Section~\ref{sec:ex-meth}).
+The Rosenbaum cross-match test uses a similar approach as the Friedman-Rafsky test, but based on the optimal non-bipartite matching instead of the MST as a similarity graph (see Section~\ref{sec:ex-meth}).
 The new function \fct{Rosenbaum} is a wrapper around the \fct{crossmatchtest} function from the \pkg{crossmatch} package \citep{crossmatch}.
 Again, a distance function can be supplied.
 By default, this is \fct{stats::dist}, i.e., the Euclidean distance.
@@ -871,7 +933,7 @@ The output of the function includes the raw edge count, its standard error, and 
 In contrast, only either the exact or the approximative $p$~value is returned.
 By default (\code{exact = TRUE}), the exact $p$~value is returned.
 This is appropriate for samples that are not too large.
-Note that with a pooled sample size of $340$ or more, it is numerically impossible to derive the exact distribution due to the factorials involved in the calculation and \fct{crossmatchtest} will return a missing value for the exact $p$~value.
+Note that with a pooled sample size of $340$ or more, it is numerically impossible to derive the exact distribution due to the factorials involved in the calculation, and \fct{crossmatchtest} will return a missing value for the exact $p$~value.
 
 \subsection[Energy statistic and generalizations]{Energy statistic and generalizations by \citet{baringhaus_rigid_2010}}
 The energy statistic is a popular two- and $k$-sample statistic based on interpoint distances. 
@@ -880,23 +942,23 @@ The $k$-sample statistic is defined as
 T_\text{Energy} = &\sum_{1\le i<j\le k} \frac{n_i n_j}{n_i + n_j} \left(\frac{2}{n_i n_j}\sum_{u = 1}^{n_i}\sum_{v = 1}^{n_j} \|X^{(i)}_u - X^{(j)}_v\| \right.\\
 & \left.- \frac{1}{n_i^2} \sum_{u = 1}^{n_i}\sum_{v = 1}^{n_i} \|X^{(i)}_u - X^{(i)}_v\|_2 - \frac{1}{n_j^2} \sum_{u = 1}^{n_j}\sum_{v = 1}^{n_j} \|X^{(j)}_u - X^{(j)}_v\|_2\right).
 \end{align*}
-For a comprehensive review of the literature on the energy statistic and its applications please refer to \citet{szekely_energy_2017}.
+For a comprehensive review of the literature on the energy statistic and its applications, please refer to \citet{szekely_energy_2017}.
 A permutation test can be performed based on the energy statistic. 
 In the two-sample case, the energy statistic is equal to two times the Cramér test statistic of \citet{baringhaus_new_2004} and therefore the tests are equivalent.
 However, a Bootstrap instead of a permutation test is proposed for the Cramér test. 
 \citet{baringhaus_rigid_2010} propose a test statistic that generalizes the Cramér test statistic by using a continuous function $\phi$ such that $\phi(\|x-y\|^2)$ is a negative definite kernel instead of the Euclidean distances.
 Different examples for $\phi$ are given, including as special cases the Cramér test, the test by \citet{bahr_ein_1996}, and the test by \citet{szabo_variable_2002}. 
-Overall, $\phi(z) = \log(1 + z)$ is recommended for general alternatives based on a simulation study and the Cramér test is recommended for location alternatives.
+Overall, $\phi(z) = \log(1 + z)$ is recommended for general alternatives based on a simulation study, and the Cramér test is recommended for location alternatives.
 The tests of \citet{baringhaus_rigid_2010} are implemented in the \pkg{cramer} package \citep{cramer}. 
-The new implementation is a simple wrapper to unify in- and output naming and types. 
+The new implementation is a simple wrapper to unify input and output naming and types. 
 The energy statistic is implemented in the \pkg{energy} package \citep{energy}. 
 For the corresponding wrapper, the input type was changed more since the original implementation had the pooled sample and the sample sizes as the input. 
-The \pkg{energy} implementation outsourced the calculation of the energy statistic to \proglang{C} which gives it a notable advantage with regard to computing time over the \pkg{cramer} implementation.
+The \pkg{energy} implementation outsourced the calculation of the energy statistic to \proglang{C}, which gives it a notable advantage with regard to computing time over the \pkg{cramer} implementation.
 
 \subsection[Random forest-based test]{Random forest-based test \citep{hediger_use_2021}} 
-The random forest based method of \citet{hediger_use_2021} is briefly described above in Section~\ref{sec:ex-meth}.
+The random forest-based method of \citet{hediger_use_2021} is briefly described above in Section~\ref{sec:ex-meth}.
 The function here is a wrapper around the \fct{hypoRF} function from the \pkg{hypoRF} package \citep{hypoRF} that only renames arguments for consistency with the other methods.
-Note that the implemented per class OOB statistics differ for the permutation test and the approximate test: for the permutation test, the sum of the per class OOB errors is returned, for the asymptotic version, the standardized sum is returned.
+Note that the implemented per-class OOB statistics differ for the permutation test and the approximate test: for the permutation test, the sum of the per-class OOB errors is returned, for the asymptotic version, the standardized sum is returned.
 
 \subsection{Wasserstein distance}
 The $q$-Wasserstein distance \citep{vaserstein_markov_1969} of two distributions $F_1$ and $F_2$ on $\mathcal{X}$ is defined as 
@@ -934,8 +996,8 @@ The second part, $C$, consists of squared distances of proportions of data point
 For both parts, the mean over all such Balls with radii equal to the distances of the center point of the ball to all other points from the same sample is taken. 
 For multiple samples, the pairwise test statistics can be summarized by summing up the pairwise divergences, or by taking the maximum of sums of the Ball divergences from each sample to all other samples, or by summing the largest $k-1$ pairwise Ball divergences.\\
 The implementation here is a wrapper around the \fct{bd.test} function from the \pkg{Ball} package \citep{Ball}.
-In contrast to the original implementation, the new wrapper returns an object of class \class{htest} in the multi-sample case although in that case no test is conducted.
-Moreover, only the summarized statistic according to the specified \code{kbd.type} which determines how the pairwise Ball divergences are summarized is returned.
+In contrast to the original implementation, the new wrapper returns an object of class \class{htest} in the multi-sample case, although in that case no test is conducted.
+Moreover, only the summarized statistic according to the specified \code{kbd.type}, which determines how the pairwise Ball divergences are summarized, is returned.
 
 \subsection[Multisample graph-based tests]{Multisample graph-based tests \citep{song_new_2022}}
 \citet{song_new_2022} propose three new tests for the $k$-sample problem that use the between-sample edges and the within-sample edges of a similarity graph on the pooled sample. 
@@ -946,7 +1008,7 @@ S &= S^W + S^B\\
 S^W &= \left(R^W - \E_{H_0}(R^W)\right)^{\top} \COV_{H_0}^{-1}\left(R^W\right) \left(R^W - \E_{H_0}(R^W)\right)\\
 S^B &= \left(R^B - \E_{H_0}(R^B)\right)^{\top} \COV_{H_0}^{-1}\left(R^B\right) \left(R^B - \E_{H_0}(R^B)\right).
 \end{align*}
-The second test statistic is based on the vector $R^A$ of all linearly independent numbers of edges between and within samples, i.e., all numbers of edges between all pairs of samples including the pairs of a sample with itself except for the pair of sample~$(k-1)$ and sample~$k$. 
+The second test statistic is based on the vector $R^A$ of all linearly independent numbers of edges between and within samples, i.e., all numbers of edges between all pairs of samples, including the pairs of a sample with itself, except for the pair of sample~$(k-1)$ and sample~$k$. 
 The test statistic is then defined as
 \[
 S^A = \left(R^A - \E_{H_0}(R^A)\right)^{\top} \COV_{H_0}^{-1}\left(R^A\right) \left(R^A - \E_{H_0}(R^A)\right).
@@ -955,13 +1017,13 @@ All expectations and covariances under the null can be calculated analytically a
 While $\COV_{H_0}\left(R^W\right)$ is shown to be always invertible, no such proof exists for $\COV_{H_0}\left(R^B\right)$ and $\COV_{H_0}\left(R^A\right)$. 
 Therefore, \citet{song_new_2022} suggest checking the invertability numerically before applying the test and using a generalized inverse if necessary. This is already done within their implementation. 
 Based on $S^A$, an asymptotic test can easily be performed. 
-The asymptotic distribution of $S$ is more complicated and hard to compute in practice, therefore a fast test is suggested instead.
+The asymptotic distribution of $S$ is more complicated and hard to compute in practice, therefore, a fast test is suggested instead.
 It combines the tests using $S^W$ and $S^B$ and takes the Bonferroni-adjusted $p$~value of both these tests. 
 Alternatively, a permutation test can be performed for either $S^A$ or $S$.\\
-The implementation here for the test of \citet{song_new_2022} is a wrapper around the \fct{gtestsmulti} function form \pkg{gTestsMulti} \citep{gTestsMulti}.
+The implementation here for the test of \citet{song_new_2022} is a wrapper around the \fct{gtestsmulti} function from \pkg{gTestsMulti} \citep{gTestsMulti}.
 The input is simplified as for the wrapper around \fct{g.tests}.
 The user has to choose whether the original ($S$) or the fast ($S^A$) version of the test should be performed.
-If the number of permutations for the permutation test (\code{n.perm}) is set to 0, the approximate test is performed, otherwise the permutation $p$~value is reported.
+If the number of permutations for the permutation test (\code{n.perm}) is set to 0, the approximate test is performed; otherwise, the permutation $p$~value is reported.
 
 
 \subsection{DISCO}
@@ -989,28 +1051,28 @@ Here, $Z$ denotes the pooled sample and the between-sample measure of dispersion
 S_{\alpha} &= \sum_{1\le i < j \le k} \frac{n_i + n_j}{2N} d_{\alpha}(X^{(i)}, X^{(j)}), \\
 W_{\alpha} &= \sum_{i = 1}^k \frac{n_i}{2} g_{\alpha}(X^{(i)}, X^{(i)}).
 \end{align*}
-The between-sample measure of dispersion $S_{\alpha}$ can be used directly to compare $k$-sample permutation test (\fct{DISCOB}). 
+The between-sample measure of dispersion $S_{\alpha}$ can be used directly to compare the distributions in a $k$-sample permutation test (\fct{DISCOB}). 
 Alternatively, the statistic
 \[
 F_{\alpha} = \frac{S_{\alpha}/(k-1)}{W_{\alpha}/(N-k)}
 \]
 can be used in a $k$-sample permutation test (\fct{DISCOF}).
-For each index $\alpha\in(0,2)$ this determines a nonparametric test for the multi-sample problem that is statistically consistent against general alternatives.
+For each index $\alpha\in(0,2)$, this determines a nonparametric test for the multi-sample problem that is statistically consistent against general alternatives.
 For $\alpha = 2$, it equals the usual ANOVA $F$-test. 
 The choice of the index $\alpha$ is difficult. 
-In general, the computational costs for calculating Gini means $g_{\alpha}$, in terms of which the test statistic can be formulated, is $\mathcal{O}(N^2)$.
+In general, the computational costs for calculating Gini means $g_{\alpha}$, in terms of which the test statistic can be formulated, are $\mathcal{O}(N^2)$.
 For $\alpha= 1$, it can be linearized and computation time reduces to $\mathcal{O}(N\log N)$. 
 The simplest and most natural choice for $\alpha$ is one.
 For heavy-tailed distributions, a small $\alpha$ is recommended.\\
 The test is implemented by permutation Bootstrap in the \texttt{R} package \texttt{energy} \citep{energy}.
-The new implementations of the between-sample and of the DISCO $F$-test are wrappers that mainly unify the in- and outputs which differed between the two tests in the original implementation. 
+The new implementations of the between-sample and of the DISCO $F$-test are wrappers that mainly unify the inputs and outputs, which differed between the two tests in the original implementation. 
 Moreover, the input format is again changed from the pooled sample and the dataset labels to the individual datasets. 
 
 \subsection{(Modified / multiscale / aggregated) RI and FS test}
 \citet{paul_clustering-based_2022} propose distribution-free $k$-sample tests intended for the high dimension low sample size (HDLSS) setting.
 The tests are based on clustering the pooled sample and comparing the resulting clustering to the true dataset membership via a contingency table.
-If the datasets come from the same distribution, the cluster and dataset membership are independent while if the datasets come from different distributions, the clustering depends on the true dataset membership. 
-As a clustering algorithm, \citet{paul_clustering-based_2022} suggest using $K$-means based on the generalized version of the \textit{Mean Absolute Difference of Distances (MADD)}
+If the datasets come from the same distribution, the cluster and dataset membership are independent, while if the datasets come from different distributions, the clustering depends on the true dataset membership. 
+As a clustering algorithm, \citet{paul_clustering-based_2022} suggest using $K$-means based on the generalized version of the \textit{mean absolute difference of distances (MADD)}
 \[
 \rho_{h,\varphi}(z_i, z_j) = \frac{1}{N-2} \sum_{m\in \{1,\dots, N\}\setminus\{i,j\}} \left| \varphi_{h,\psi}(z_i, z_m) - \varphi_{h,\psi}(z_j, z_m)\right|,
 \]
@@ -1024,21 +1086,21 @@ It is zero when the clustering is perfect, i.e., when the cluster membership is 
 The test rejects for low values since the Rand index should take higher values when all clusters have similar distributions of class labels.
 The critical value can be calculated using a generalized hypergeometric distribution.
 Due to the discreteness of the Rand index, \citet{paul_clustering-based_2022} propose to use a randomized test. 
-For the FS test, the generalized Fisher's test statistic for testing for independence in an $k\times\ell$ contingency tables is used. 
+For the FS test, the generalized Fisher's test statistic for testing for independence in an $k\times\ell$ contingency table is used. 
 Again, a randomized test using the generalized hypergeometric distribution to find the critical values is proposed.\\
 \citet{paul_clustering-based_2022} additionally propose modified versions of the tests (MRI, MFS test).
-For these, the number of clusters is estimated from the data using the Dunn index since setting the number of clusters to $k$ might fail in case of multimodal distributions where a larger number of clusters might be required where then multiple clusters can correspond to one dataset. \\
+For these, the number of clusters is estimated from the data using the Dunn index since setting the number of clusters to $k$ might fail in case of multimodal distributions, where a larger number of clusters might be required, and then multiple clusters can correspond to one dataset. \\
 Moreover, multiscale versions of the tests are presented (MSRI, MSFS test) for the case where the number of clusters is unclear.
-The respective tests are then performed for different numbers of clusters and the results are aggregated using a Bonferroni adjustment for the individual tests. 
+The respective tests are then performed for different numbers of clusters, and the results are aggregated using a Bonferroni adjustment for the individual tests. 
 Still, an upper limit for the number of clusters to be considered must be chosen. 
 The implementation also includes aggregated tests (AFS / ARI test) that perform all pairwise FS / MFS or RI / MRI tests, respectively, on the samples and aggregate the results by taking the minimum test statistic value and applying a multiple testing procedure. \\
 The tests are implemented in the \proglang{R} package \pkg{HDLSSkST} \citep{HDLSSkST}.
-The main difference of the new wrapper functions and the original implementation is that the modified and multiscale versions of the RI and FS test can be performed with the same function as the original tests. 
-The test can be chosen via the newly introduced \code{version} argument of the \fct{FStest} and \fct{RItest} function. 
-One advantage of this is that the in- and output formats are unified between the versions of the test. 
-In the original implementation of the test the elements of the output list differ both content-wise and also in their names between the tests. 
+The main difference between the new wrapper functions and the original implementation is that the modified and multiscale versions of the RI and FS tests can be performed with the same function as the original tests. 
+The test can be chosen via the newly introduced \code{version} argument of the \fct{FStest} and \fct{RItest} functions. 
+One advantage of this is that the input and output formats are unified between the versions of the test. 
+In the original implementation of the test, the elements of the output list differ both content-wise and in their names between the tests. 
 Moreover, the input of the tests differs slightly between the original functions for the different tests. 
-The input is also unified to match the input of the other functions in the \pkg{DataSimilarity} package and therefore consists simply of the datasets instead of a pooled data matrix, a vector with the dataset affiliation of each observation and a vector of the sample sizes. 
+The input is also unified to match the input of the other functions in the \pkg{DataSimilarity} package and therefore consists simply of the datasets instead of a pooled data matrix, a vector with the dataset affiliation of each observation, and a vector of the sample sizes. 
 We think this is easier to understand and less error-prone from a user perspective. 
 
 \subsection{MMD} 
@@ -1075,7 +1137,7 @@ where
 \beta &= \frac{1}{n_2(n_2 - 1)}\sum_{i=1}^{n_2}\sum_{\substack{j = 1\\ j\ne i}}^{n_2} K(Y_i, Y_j),\\
 \gamma &= \frac{1}{n_1n_2}\sum_{i=1}^{n_1}\sum_{j = 1}^{n_2} K(X_i, Y_j).
 \end{align*}
-As a new statistic they propose to use
+As a new statistic, they propose to use
 \[
 \text{GPK} = (\alpha - \E_{H_0}(\alpha), \beta - \E_{H_0}(\beta)) \COV^{-1}_{H_0}\left(\begin{pmatrix} \alpha\\ \beta \end{pmatrix}\right) \begin{pmatrix} \alpha - \E_{H_0}(\alpha)\\ \beta - \E_{H_0}(\beta)\end{pmatrix}.
 \]
@@ -1084,18 +1146,18 @@ The GPK can be decomposed into $\text{GPK} = Z_W^2 + Z_D^2$, where $Z_W$ and $Z_
 W &= \frac{n_1}{N}\alpha + \frac{n_2}{N}\beta\\
 D &= n_1 (n_1 -1) \alpha - n_2(n_2 - 1)\beta.
 \end{align*}
-Based on this observation they further generalize $W$ to
+Based on this observation, they further generalize $W$ to
 \[
 W_r = r\frac{n_1}{N}\alpha + \frac{n_2}{N}\beta
 \]
 and $Z_W$ to $Z_{W,r}$. 
-Fast tests based on $Z_{W,r}$ are proposed as the asymptotic distribution of $Z_W = Z_{W, 1}$ is complicated but that of $Z_{W,r}, r\ne 1$, is a standard normal under mild assumptions.
-One fast test fGPK uses the Bonferroni adjusted test result of the tests based on $Z_D$, $Z_{W,1.2} =: ZW_1$ and $Z_{W,0.8} =: ZW_2$, the other fast test fGPK$_M$ uses the Bonferroni adjusted test result of the tests based on $Z_{W,1.2}$ and $Z_{W,0.8}$. For GPK (as well as for fGPK and fGPK$_M$) a permutation test can be performed.\\
+Fast tests based on $Z_{W,r}$ are proposed as the asymptotic distribution of $Z_W = Z_{W, 1}$ is complicated, but that of $Z_{W,r}, r\ne 1$, is a standard normal under mild assumptions.
+One fast test fGPK uses the Bonferroni adjusted test result of the tests based on $Z_D$, $Z_{W,1.2} =: ZW_1$ and $Z_{W,0.8} =: ZW_2$, the other fast test fGPK$_M$ uses the Bonferroni adjusted test result of the tests based on $Z_{W,1.2}$ and $Z_{W,0.8}$. For GPK (as well as for fGPK and fGPK$_M$), a permutation test can be performed.\\
 The new implementation \fct{GPK} based on the \fct{kertests} function from the \pkg{kerTests} package \citep{kerTests} performs by default the fast test version instead of a permutation test, and the bandwidth parameter $\sigma$ of the RBF kernel that is used as $K$ is chosen via the median heuristic using the function \fct{med\_sigma} of the \pkg{kerTests} package.
 The median heuristic sets the bandwidth of the kernel to the median value of all pairwise distances in the pooled sample \citep{sriperumbudur_kernel_2009}. 
 When the fast test is performed, all three test statistics, $ZW_1$, $ZW_2$, and $Z_D$ are returned together with the asymptotic $p$~value if \code{n.perm = 0} or the permutation $p$~value if \code{n.perm > 0}, respectively.
 For the GPK statistic, only the permutation test is available as its null distribution cannot be accessed.
-Therefore, if the number of permutations is set to zero, the fast test is performed always.
+Therefore, if the number of permutations is set to zero, the fast test is always performed.
 This holds even if \code{fast} is set to \code{FALSE} (with a warning).
 
 \subsection[LP test]{LP test \citet{mukhopadhyay_nonparametric_2020}}
@@ -1103,9 +1165,9 @@ For the test of \citet{mukhopadhyay_nonparametric_2020}, a nonparametrically des
 These are used for the construction of a polynomial kernel of degree 2 that encodes the similarity between two data points in the LP-transformed domain.
 The values of the kernel Gram matrix are then used as weights on a graph with the pooled sample as vertices. 
 The idea is to cluster points for the graph into $k$ groups that have higher connectivity and compare how closely related this clustering is to the true memberships of the $k$ distributions. 
-Then the problem reduces to testing independence which can be accomplished by determining whether all of the LP comeans are zero.\\
+Then the problem reduces to testing independence, which can be accomplished by determining whether all of the LP comeans are zero.\\
 The test is implemented in the \pkg{LPKsample} package \citep{LPKsample}.
-The new implementation offers the additional option to sum over all components instead of summing over the significant components only which might be of interest when using the statistic as a data similarity measure without testing.
+The new implementation offers the additional option to sum over all components instead of summing over the significant components only, which might be of interest when using the statistic as a data similarity measure without testing.
 By default, this is disabled (\code{sum.all = FALSE}).
 When only summing over the significant components, the returned test statistic is always equal to zero when no component is significant.
 
@@ -1114,7 +1176,7 @@ When only summing over the significant components, the returned test statistic i
 The \emph{classifier two-sample test} is already described in Section~\ref{sec:ex-meth}.
 For the C2ST, the classifier can be specified by the user and defaults to $K$-nearest neighbors.
 Possible options are all models accepted by \fct{caret::train}.
-For a list of classification models, call e.g. %
+For a list of classification models, call e.g., %
 <<methods, echo=TRUE, results=hide>>=
 names(caret::getModelInfo())[sapply(caret::getModelInfo(), function(x) {
   "Classification" %in% x$type
@@ -1127,7 +1189,7 @@ names(caret::getModelInfo())[sapply(caret::getModelInfo(), function(x) {
 \subsection[Multisample cross-match tests]{Multisample cross-match tests of \citet{mukherjee_distribution-free_2022} and \citet{petrie_graph-theoretic_2016}} 
 The tests of \citet{mukherjee_distribution-free_2022} and \citet{petrie_graph-theoretic_2016} generalize the Rosenbaum cross-match test to multiple samples by calculating the cross-counts for all pairs of samples based on the optimal non-bipartite matching on the pooled sample and taking the Mahalanobis distance or simply the sum of the cross-counts, respectively, as the test statistics.
 New functions \fct{MMCM} and \fct{Petrie} were implemented. 
-There exist implementations of of these methods in the R package \pkg{multicross} \citep{multicross}, but the package is archived on CRAN and the implementation makes it impossible to access the test statistic and $p$~value as numeric values. 
+There exist implementations of these methods in the R package \pkg{multicross} \citep{multicross}, but the package is archived on CRAN, and the implementation makes it impossible to access the test statistic and $p$~value as numeric values. 
 Therefore, here the functions were re-implemented from scratch. 
 To ensure that the new functions are not derivations of the \pkg{multicross} versions, they were implemented by an author who had not looked at the \pkg{multicross} implementations before. 
 The functions implement the formulas from Section~2 of \citet{mukherjee_distribution-free_2022}.  
@@ -1136,16 +1198,16 @@ The \pkg{nbpMatching} package \citep{nbpMatching} is used for calculating the op
 Note that in case of ties in the distance matrix, the optimal non-bipartite matching might not be defined uniquely. 
 In the current implementation, the observations in the pooled sample are ordered as supplied by the user. 
 When searching for a match, the \pkg{nbpMatching} implementation of the optimal non-bipartite matching algorithm starts at the end of the pooled sample. 
-Therefore, with many ties (e.g. for categorical data), observations from the first dataset are often matched with ones from the last dataset and so on.
-This might affect the validity of the test negatively since even under the null, more cross counts than expected are observed.
-A random ordering of the pooled sample might help solving this issue but would result in the observed test statistic value depending on this random ordering and is therefore not implemented. 
+Therefore, with many ties (e.g., for categorical data), observations from the first dataset are often matched with ones from the last dataset, and so on.
+This might affect the validity of the test negatively since, even under the null, more cross counts than expected are observed.
+A random ordering of the pooled sample might help solve this issue, but would result in the observed test statistic value depending on this random ordering and is therefore not implemented. 
 
 \subsection[Test using the shortest Hamiltonian path]{Test using the shortest Hamiltonian path \citep{biswas_distribution-free_2014}}
 \citet{biswas_distribution-free_2014} suggest a graph-based test similar to those of \citet{friedman_multivariate_1979} and \citet{rosenbaum_exact_2005} but using the shortest Hamiltonian path as the similarity graph.
-Since calculating the Hamiltonian path is an NP hard problem, the implementation of \fct{BMG} is based on Kruskal's algorithm which is a heuristic approach to find the shortest Hamilton Path within the pooled dataset as suggested in \citet{biswas_distribution-free_2014}.
+Since calculating the Hamiltonian path is an NP hard problem, the implementation of \fct{BMG} is based on Kruskal's algorithm, which is a heuristic approach to find the shortest Hamilton Path within the pooled dataset as suggested in \citet{biswas_distribution-free_2014}.
 Here, it is implemented as follows:
 \begin{enumerate}
-\item Create an edge list of the fully connected graph on the pooled sample, sorted by increasing Euclidian distance of the corresponding vertices.
+\item Create an edge list of the fully connected graph on the pooled sample, sorted by increasing Euclidean distance of the corresponding vertices.
 \item For each edge, check if (i) an addition of this edge leads to a cyclic graph (using \fct{IsAcyclic} from the \pkg{rlemon} package \citep{rlemon}) and (ii) an addition of this edge leads to a degree larger than two in any (used) vertex. If both criteria are not met, keep the corresponding edge.
 \item Return the reduced edge list, containing only edges needed to construct the Hamilton path.
 \end{enumerate}
@@ -1157,7 +1219,7 @@ If an asymptotic test is performed, the asymptotic null distribution is used ins
 \subsection[Rank Energy statistic]{Rank Energy statistic \citep{deb_multivariate_2021}}
 The test of \citet{deb_multivariate_2021} is a rank version of the Energy statistic. 
 The multivariate ranks are assigned using optimal transport.
-The implementation is based on R code for paper (\url{https://github.com/NabarunD/MultiDistFree}).
+The implementation is based on R code for the paper (\url{https://github.com/NabarunD/MultiDistFree}).
 It wraps up tidied-up versions of the \fct{computestatistic} and \fct{gensamdist} given there.
 The implementation uses the \pkg{randtoolbox} package \citep{randtoolbox} for random number generation, the \pkg{clue} package \citep{cluePaper, clue} to solve the assignment problem for ranking, and the \pkg{energy} package \citep{energy} for implementation of the Energy statistic.
 
@@ -1189,12 +1251,12 @@ For the aggregate function, they propose the sum or maximum of the values from t
 For using the sum as the aggregate function together with either $f_a$ or $f_s$, it can be shown that the GCR is optimal in the sense that it gives the lowest value over all common refinements. 
 For using the maximum, this property is not fulfilled. 
 \citet{ganti_framework_1999} propose using a Bootstrap test procedure for assessing whether or not the two datasets are generated by the same data-generating process. \\
-We use \pkg{rpart} package \citep{rpart} for tree estimation.
+We use the \pkg{rpart} package \citep{rpart} for tree estimation.
 In the frame of a tree object fit with \fct{rpart}, the nodes are numbered starting with 1 at the root, following the rule that the left child node gets the ID of the parent times 2 and the right child node gets the ID of the parent times 2 plus 1.
 This allows us to easily trace back the decision rules from a leaf node to the root using integer division by 2.
 Moreover, the split rules can be easily accessed using the \fct{labels} function on the tree object.
-We iterate over leaves and collect all split rules on each way from the leaf to the root.
-Suppose no upper or lower limit is specified by any split rule for a certain variable on this way.
+We iterate over leaves and collect all split rules on each path from the leaf to the root.
+Suppose no upper or lower limit is specified by any split rule for a certain variable in this way.
 In that case, we set this limit to the minimum or maximum, respectively, of this variable over both datasets.
 This ensures that each observation in any of the two datasets falls into some part of the intersected partition later on.
 The resulting set of ranges for all variables for each leaf node gives us the partition induced by the tree.
@@ -1203,7 +1265,7 @@ For \citet{ntoutsi_general_2008}, all three methods presented in the original ar
 No test is performed.
 For \citet{ganti_framework_1999}, the difference and aggregation functions can be supplied by the users.
 The suggested choices $f_a$ and $f_s$, i.e., taking the absolute differences between the joint probabilities calculated on the GCR or normalizing this difference with the sum of both probabilities, are readily implemented.
-The default different function is set to $f_a$ and the default aggregation function is set to the sum.
+The default different function is set to $f_a$, and the default aggregation function is set to the sum.
 A permutation test can be performed.\\
 Neither \citet{ntoutsi_general_2008} nor \citet{ganti_framework_1999} discuss the hyperparameter choice for the decision trees. 
 Here, we offer the options to use the default parameter settings of \fct{rpart} or to tune the hyperparameters.
@@ -1212,48 +1274,48 @@ The parameters \code{minsplit}, \code{minbucket}, and \code{cp} of the tree can 
 The ranges that are used here for tuning are chosen based on \citep{bischl_hyperparameter_2021}.
 Tuning is enabled by default but can be disabled by setting \code{tune} to \code{FALSE}.
 Cross-validation is used for tuning.
-The number of evaluations (\code{n.eval}) is set to 100 as a default and the number of folds (\code{k}) is set to 5.
+The number of evaluations (\code{n.eval}) is set to 100 as a default, and the number of folds (\code{k}) is set to 5.
 Both values can be customized by the user.
 The remaining calculation works the same for a tuned or untuned tree model.\\
-By default, the number of permutations is set to 0 corresponding to not performing any test.
+By default, the number of permutations is set to 0, corresponding to not performing any test.
 An implementation for categorical data for the method of \citet{ganti_framework_1999} is also supplied.
 This comes with the following difficulties.
-If a category is only observed in one dataset and not in the other or even if just not all combinations of categories are observed it might happen that at a certain split, not all levels of the respective variable are observed in the remaining data at that split.
-Then it is unclear, which child node the missing level gets assigned to.
+If a category is only observed in one dataset and not in the other, or even if just not all combinations of categories are observed, it might happen that at a certain split, not all levels of the respective variable are observed in the remaining data at that split.
+Then it is unclear which child node the missing level gets assigned to.
 In the \fct{rpart::rpart} implementation that we use here, the label does not get assigned at all.
 If now in the other dataset, the combination with this label is present, the respective data points do not fit anywhere in the intersected partition.
-Therefore the calculated probabilities in the joint distribution do not sum up to one anymore.
+Therefore, the calculated probabilities in the joint distribution do not sum to one anymore.
 In these cases, a warning is printed.
 It might still give a useful measure of dataset distance, but the interpretation and theoretical results might not hold anymore.
-Also note that for deep trees the intersection in practice often reduces to all combinations of categories of the variables.
-Therefore the measure reduces to the differences in frequency of all category combinations in these cases but is far more complicated and time-consuming to calculate.
+Also note that for deep trees, the intersection in practice often reduces to all combinations of categories of the variables.
+Therefore, the measure reduces to the differences in frequency of all category combinations in these cases, but is far more complicated and time-consuming to calculate.
 
 
 \subsection[OTDD]{OTDD \citep{alvarez-melis_geometric_2020}}
 A description of the optimal transport dataset distance can be found in Section~\ref{sec:ex-meth}. 
 There is a \proglang{Python} implementation of the method (\url{https://github.com/microsoft/otdd}) that was used as a rough orientation here.
-Compared to that the JDOT option is deprecated.
+Compared to that, the JDOT option is deprecated.
 The new implementation uses the Wasserstein distance implementation from \pkg{approxOT} package \citep{approxOT} and the matrix square root from \pkg{expm} package \citep{expm}.
 Note that the solution of the optimal transport between two distributions is given by their $q$-Wasserstein distance to the power of $q$.
-There are different options for the method to calculate the optimal transport based dataset distance.
+There are different options for the method to calculate the optimal transport-based dataset distance.
 First case: chosen method is \code{"augmentation"}.
-In this case, the variable means and the covariance matrix of each dataset reduced to each target observation value in that dataset are calculated.
+In this case, the variable means and the covariance matrix of each dataset, reduced to each target observation value in that dataset, are calculated.
 The mean vector and the vectorized covariance matrix (column-wise) corresponding to the target value are appended to each observation in each dataset.
 Then, the $q$-Wasserstein distance to the power of $q$ of these augmented datasets is calculated.
 Note that this calculation assumes commuting covariance matrices of all label distributions (rarely fulfilled in practice) and that the feature space metric coincides with the ground cost of the optimal transport problem on the labels \citep{alvarez-melis_geometric_2020}.
 Second case: chosen method is \code{"precomputed.labeldist"}.
-In this case, both the distance matrix for the label distributions and the distance matrix for the features are calculated and the corresponding distances are added with weights \code{lambda.x} and \code{lambda.y}, respectively, to calculate a cost matrix of all observations.
-In case of \code{sinkhorn = FALSE}, i.e. for the exact calculation, only the costs from each observation from the first dataset to each observation from the second dataset are needed.
+In this case, both the distance matrix for the label distributions and the distance matrix for the features are calculated, and the corresponding distances are added with weights \code{lambda.x} and \code{lambda.y}, respectively, to calculate a cost matrix of all observations.
+In case of \code{sinkhorn = FALSE}, i.e., for the exact calculation, only the costs from each observation from the first dataset to each observation from the second dataset are needed.
 In the case of using debiased Sinkhorn approximation, additionally, the costs within each dataset are needed.
 For calculating the distance matrices of the label distributions, there are again different options:
 \begin{enumerate}
-\item \code{inner.ot.method = "exact"}. The Wasserstein distance for each label pair between the datasets reduced to the observations where the target value equals the corresponding label is calculated.
+\item \code{inner.ot.method = "exact"}. The Wasserstein distance for each label pair between the datasets is reduced to the observations where the target value equals the corresponding label is calculated.
 There are options for using the (debiased) Sinkhorn approximation and changing the parameters of the Wasserstein distance and the ground cost metric.
 \item \code{inner.ot.method = "gaussian.approx"}. The label distributions are approximated by Gaussians, which leads to a simple closed-form solution of the optimal transport problem that uses only the means and covariances.
-The calculation includes calculating multiple matrix square roots of covariance matrices which might get costly if the number of variables is high.
-Moreover, this calculation fails if the estimated covariance matrix is not numerically psd.
+The calculation includes calculating multiple matrix square roots of covariance matrices, which might get costly if the number of variables is high.
+Moreover, this calculation fails if the estimated covariance matrix is not numerically positive definite.
 This might happen especially for $N < p$ settings.
-\item \code{inner.ot.method = "only.means"}. The former is further simplified by using only the means (i.e. assuming equal covariance matrices in all label distributions).
+\item \code{inner.ot.method = "only.means"}. The former is further simplified by using only the means (i.e., assuming equal covariance matrices in all label distributions).
 \item \code{inner.ot.method = "naive.upperbound"}. A distribution-agnostic upper bound for the optimal transport between the label distributions is calculated that again only relies on the means and covariance matrices of these distributions.
 \end{enumerate}
 
@@ -1277,24 +1339,24 @@ The \pkg{densratio} package was preferred here over the alternative package \pkg
 \subsection[Biswas and Ghosh (2014) test]{\citet{biswas_nonparametric_2014}}
 The statistic of \citet{biswas_nonparametric_2014} uses inter-point distances and is defined as
 \begin{align*}
-T &= ||\hat{\mu}_{D_F} - \hat{\mu}_{D_G}||^2_2, \text{ where}\\
-\hat{\mu}_{D_F} &= \left[\hat{\mu}_{FF} = \frac{2}{n_1(n_1 - 1)}\sum_{i=1}^{n_1}\sum_{j=i+1}^{n_1}||X_{i}^{(1)} - X_{j}^{(1)}||, \hat{\mu}_{FG} = \frac{1}{n_1 n_2}\sum_{i=1}^{n_1}\sum_{j=1}^{n_2}||X_{i}^{(1)} - X_{j}^{(2)}||\right],\\
-\hat{\mu}_{D_G} &= \left[\hat{\mu}_{FG} = \frac{1}{n_1 n_2}\sum_{i=1}^{n_1}\sum_{j=1}^{n_2}||X_{i}^{(1)} - X_{j}^{(2)}||, \hat{\mu}_{GG} = \frac{2}{n_2(n_2 - 1)}\sum_{i=1}^{n_2}\sum_{j=i+1}^{n_2}||X_{i}^{(2)} - X_{j}^{(2)}||\right].
+T &= ||\hat{\mu}_{D_{F_1}} - \hat{\mu}_{D_{F_2}}||^2_2, \text{ where}\\
+\hat{\mu}_{D_{F_1}} &= \left[\hat{\mu}_{{F_1}{F_1}} = \frac{2}{n_1(n_1 - 1)}\sum_{i=1}^{n_1}\sum_{j=i+1}^{n_1}||X_{i}^{(1)} - X_{j}^{(1)}||, \hat{\mu}_{{F_1}{F_2}} = \frac{1}{n_1 n_2}\sum_{i=1}^{n_1}\sum_{j=1}^{n_2}||X_{i}^{(1)} - X_{j}^{(2)}||\right]^\top,\\
+\hat{\mu}_{D_{F_2}} &= \left[\hat{\mu}_{{F_1}{F_2}} = \frac{1}{n_1 n_2}\sum_{i=1}^{n_1}\sum_{j=1}^{n_2}||X_{i}^{(1)} - X_{j}^{(2)}||, \hat{\mu}_{{F_2}{F_2}} = \frac{2}{n_2(n_2 - 1)}\sum_{i=1}^{n_2}\sum_{j=i+1}^{n_2}||X_{i}^{(2)} - X_{j}^{(2)}||\right]^\top.
 \end{align*}
 For testing, the scaled statistic
 \begin{align*}
 T^* &= \frac{N\hat{\lambda}(1 - \hat{\lambda})}{2\hat{\sigma}_0^2} T \text{ with}\\
 \hat{\lambda} &= \frac{n_1}{N},\\
 \hat{\sigma}_0^2 &= \frac{n_1S_1 + n_2S_2}{N}, \text{ where}\\
-S_1 &= \frac{1}{\binom{n_1}{3}} \sum_{1\le i < j < l \le n_1} ||X_{i}^{(1)} - X_{j}^{(1)}||\cdot ||X_{i}^{(1)} - X_{l}^{(1)}|| - \hat{\mu}_{FF}^2 \text{ and}\\
-S_2 &= \frac{1}{\binom{n_2}{3}} \sum_{1\le i < j < l \le n_2} ||X_{i}^{(2)} - X_{j}^{(2)}||\cdot ||X_{i}^{(2)} - X_{l}^{(2)}|| - \hat{\mu}_{GG}^2
+S_1 &= \frac{1}{\binom{n_1}{3}} \sum_{1\le i < j < l \le n_1} ||X_{i}^{(1)} - X_{j}^{(1)}||\cdot ||X_{i}^{(1)} - X_{l}^{(1)}|| - \hat{\mu}_{{F_1}{F_1}}^2 \text{ and}\\
+S_2 &= \frac{1}{\binom{n_2}{3}} \sum_{1\le i < j < l \le n_2} ||X_{i}^{(2)} - X_{j}^{(2)}||\cdot ||X_{i}^{(2)} - X_{l}^{(2)}|| - \hat{\mu}_{{F_2}{F_2}}^2
 \end{align*}
 is used as it is asymptotically $\chi^2_1$-distributed.
 The new function \fct{BG2014} implements the \citet{biswas_nonparametric_2014} test from scratch.
 \fct{stats:::dist} is used to calculate the Euclidean distance matrix on the pooled sample.
 The statistic $T$ and the scaled test statistic $T^*$ are implemented according to the formulas above.
 A permutation test is implemented by permuting the distance matrix, recalculating the test statistic $T$ for the permuted distances, and calculating the $p$~value as the proportion of permuted test statistics larger than the observed test statistic
-An asymptotic test is implemented using the asymptotic result from Theorem 4.1 of \citet{biswas_nonparametric_2014}, i.e. calculating the $p$~value as \code{stats::pchisq(}$T^*$\code{, lower.tail = FALSE)}.
+An asymptotic test is implemented using the asymptotic result from Theorem 4.1 of \citet{biswas_nonparametric_2014}, i.e., calculating the $p$~value as \code{stats::pchisq(}$T^*$\code{, lower.tail = FALSE)}.
 
 
 \subsection{Engineer metric} 
@@ -1305,10 +1367,10 @@ The $L_q$-\textit{Engineer metric} is defined as
 where $X_i, Y_i$ denote the $i$th component of the $p$-dimensional random vectors $X\sim F_1$ and $Y\sim F_2$.
 A new function \fct{engineerMetric} is implemented.
 Since the Engineer metric is simply the $L_q$-distance of the expectations of two random vectors, it is estimated as the $L_q$-distance of the column means of the datasets.
-For the distance calculation, the base function \fct{norm} is used and different options for the $L_q$ norm are available via the \code{type} argument.
+For the distance calculation, the base function \fct{norm} is used, and different options for the $L_q$ norm are available via the \code{type} argument.
 
 \subsection[Schilling-Henze test]{\citet{schilling_multivariate_1986} and \citet{henze_multivariate_1988} test} 
-The Schilling-Henze test uses the mean within sample edge-count, i.e.,
+The Schilling-Henze test uses the mean within-sample edge-count, i.e.,
 \[
 \text{SH} := L := \frac{1}{KN} (R_1 + R_2)
 \]
@@ -1316,36 +1378,36 @@ in a $K$-nearest neighbor graph as the test statistic.
 It is implemented from scratch as follows.
 \begin{enumerate}
 \item Calculate $K$-nearest neighbor (NN) edge matrix on the pooled sample (distance function returning a distance matrix and $K$ are inputs of the function), i.e. create a matrix where the first column is each observation number repeated $K$ times, and the second column are the corresponding $K$ nearest neighbors of that observation. For the calculation of the $K$-NN graph, a function can be supplied by the user. Pre-implemented options include a wrapper for the \fct{kNN} function from the \pkg{dbscan} package \citep{dbscan} and the fast (approximative) $K$-NN algorithm implemented in the \fct{get.knn} function from the \pkg{FNN} package \citep{FNN}.
-\item Count the number of rows where both observations come from the same sample $L$ (i.e. either both have observation number $\le n_1$ or both have observation number $> n_1$)
+\item Count the number of rows where both observations come from the same sample $L$ (i.e., either both have observation number $\le n_1$ or both have observation number $> n_1$)
 \item Calculate the quantities $\E_{H_0}(L)$ and $\VAR_{H_0}(L)$ from proposition 2.1 in \citet{henze_multivariate_1988}
 \item Calculate the standardized test statistic $L^* = (L - \E_{H_0}(L)) / \sqrt{\VAR_{H_0}(L)}$
-\item When performing a permutation test, permute the distance matrix on the pooled sample, recalculate $L$, and calculate the proportion of permuted test statistic that is larger than the observed value of $L$
+\item When performing a permutation test, permute the distance matrix on the pooled sample, recalculate $L$, and calculate the proportion of permuted test statistics that are larger than the observed value of $L$
 \item When performing an asymptotic test, use the asymptotic normal distribution of $Z$ as proposed in Remark 5.1 of \citet{henze_multivariate_1988}.
 \item The observed value of $L^*$ is returned in the result as the \code{statistic}, the observed $L$ is returned as the \code{estimate}.
 \end{enumerate}
 The default for $K$ is set to one.
-This is rather arbitrary based on computational speed as there is no good rule for choosing $K$ so far proposed in the literature \citep{aslan_new_2005}.
+This is rather arbitrary based on computational speed, as there is no good rule for choosing $K$ so far proposed in the literature \citep{aslan_new_2005}.
 
 \subsection[Generalization of the Schilling-Henze Test]{\citet{barakat_multivariate_1996} Generalization of the Schilling-Henze Test}
 \citet{barakat_multivariate_1996} generalize the Schilling-Henze nearest neighbor test to circumvent choosing the number of nearest neighbors. 
 Their test statistic is the sum of edge counts for all values of $K$ for the $K$-nearest neighbor graph. 
 The resulting test is equivalent to a sum of Wilcoxon rank sums.
 It requires samples in the Euclidean space $\mathbb{R}^p$ and it is assumed that there are no ties in ranking w.r.t. to nearness.\\
-Within our implementation we do not explicitly calculate the $K$-nearest neighbor graph for all possible values of $K$ as this would be highly inefficient.
-Instead, the distance matrix on the pooled sample is calculated with a user-specified distance function (Euclidean distance calculated via \fct{stats::dist} by default) and the column-wise orderings of the distances excluding the diagonal elements are calculated. 
+Within our implementation, we do not explicitly calculate the $K$-nearest neighbor graph for all possible values of $K$ as this would be highly inefficient.
+Instead, the distance matrix on the pooled sample is calculated with a user-specified distance function (Euclidean distance calculated via \fct{stats::dist} by default), and the column-wise orderings of the distances, excluding the diagonal elements, are calculated. 
 Then, the cumulative numbers of the elements smaller than $n_1$ are calculated for the first $n_1$ columns of the orderings, corresponding to the numbers of within-sample edges in the first sample in the $K$-nearest neighbor graph for $K = 1,\dots,N-1$. 
 Analogously, the cumulative numbers of the elements greater than $n_1$ are calculated for the remaining $n_2$ columns of the orderings, corresponding to the numbers of within-sample edges in the second sample in the $K$-nearest neighbor graph for $K = 1,\dots,N-1$.
-Lastly, all these cumulative numbers are summed up which corresponds to the \citet{barakat_multivariate_1996} test statistic. 
+Lastly, all these cumulative numbers are summed up, which corresponds to the \citet{barakat_multivariate_1996} test statistic. 
 A permutation test is implemented using the \fct{boot::boot} function. 
-For that, the distances are permuted directly and the calculation is repeated for the permuted distance matrix which circumvents the costly recalculation of the distances for each permutation. 
+For that, the distances are permuted directly, and the calculation is repeated for the permuted distance matrix, which circumvents the costly recalculation of the distances for each permutation. 
 
 
 \subsection[Tree-based test]{Tree-based test \citep{yu_two-sample_2007}}
 \citet{yu_two-sample_2007} propose a permutation test that uses the classification error of a classification tree that distinguishes between the two datasets.
-The implementation of the test is based on the \fct{C2ST} function as the methods work very similar.
-Here, we set the classifier to \code{"rpart"}, i.e. a CART.
-Instead of the classification accuracy as for the C2ST, the classification error, i.e., $1 - $ Accuracy is returned.
-A permutation test is implemented using the \fct{boot::boot} framework and the permutation $p$~value is calculated as the proportion of the number + 1 of permuted test statistics smaller than the observed value divided by the number of permutations.
+The implementation of the test is based on the \fct{C2ST} function as the methods work very similarly.
+Here, we set the classifier to \code{"rpart"}, i.e., a CART.
+Instead of the classification accuracy as for the C2ST, the classification error, i.e., $1 - $ Accuracy, is returned.
+A permutation test is implemented using the \fct{boot::boot} framework, and the permutation $p$~value is calculated as the proportion of the number + 1 of permuted test statistics smaller than the observed value divided by the number of permutations.
 \citet{yu_two-sample_2007} do not propose any asymptotic test, but since their test fits into the framework of \citet{lopez-paz_revisiting_2017}, the binomial test proposed there and implemented in the \fct{Ecume::classifier\_test} function utilized by \fct{C2ST} is still valid and therefore kept in the implementation.
 
 \subsection[Characteristic distance]{Characteristic distance \citep{li_measuring_2022}}
@@ -1360,7 +1422,7 @@ where $X^{\prime}, X^{\prime\prime}$ and $Y^{\prime}, Y^{\prime\prime}$ denote i
 An empirical version is obtained by replacing the conditional expectations with empirical means.
 The implementation calculates the empirical characteristic distance between two datasets.
 For both summands, Euler's formula is used for every entry of the inner product defined in \citet{li_measuring_2022}. 
-Both mean values are calculated, and the squared complex modulus of the difference of both means is calculated.
+Both mean values are calculated, and the squared complex modulus of the difference between both means is calculated.
 Since the inner product leads to a symmetric matrix, only an upper triangular matrix is calculated, and the final sum is multiplied by two.
 A permutation test with \code{n.perm} permutations and random seed \code{seed} for reproducibility is performed.
 
@@ -1393,13 +1455,13 @@ For the general case for categorical data, the user has to specify a feature fun
 Additionally, either the covariance matrix $\COV[S]$ if known or the sample space has to be given.
 If both are given, the supplied covariance matrix is used and not recalculated.
 The constrained minimum distance is calculated using Theorem 1 in \citet{tatti_distances_2007}, i.e., the formulas given above.
-Therefore the supplied or calculated $\COV[S]$, respectively, has to be invertible.
+Therefore, the supplied or calculated $\COV[S]$, respectively, has to be invertible.
 
 \subsection[Biau and Giorfy test]{\citet{biau_asymptotic_2005}}
 \citet{biau_asymptotic_2005} test for homogeneity of two (multivariate) datasets by calculating the $L_1$-distance between the two empirical distributions restricted to a finite partition.
 For this, a finite partition of the subspace spanned by the two datasets has to be defined.
 By default, we define a rectangular partition under the assumption of approximately equal cell probabilities.
-The number of elements of the partition $m_n$ are chosen according to the convergence criteria in \citet{biau_asymptotic_2005} as $n^{0.8}$, where the exponent can be varied as an argument (\code{exponent}).
+The number of elements of the partition $m_n$ is chosen according to the convergence criteria in \citet{biau_asymptotic_2005} as $n^{0.8}$, where the exponent can be varied as an argument (\code{exponent}).
 For each dimension, $m_n^{1/p} + 1$ equidistant cut-points are created along the range of both datasets to define the partition.
 It must be ensured that there are at least three cut-points per dimension (min, max, and one point splitting the data into two bins).
 The argument \code{eps} ensures that the partition covers all data points by adding some small value to the data range.
@@ -1424,13 +1486,13 @@ It has the following advantages.
 \item The output is an object of class \class{htest} for pretty displaying of the results.
 \end{itemize}
 One restriction of the new function is that it no longer supports balanced permutation. 
-That was necessary to ensure the reproducibility which we considered a trade-off worth making since the use of balanced permutation is controversial anyways, see \citet{southworth_properties_2009}, and reproducibility is essential for permutation tests.
+That was necessary to ensure the reproducibility, which we considered a trade-off worth making since the use of balanced permutation is controversial anyway, see \citet{southworth_properties_2009}, and reproducibility is essential for permutation tests.
 
 
 \section*{Acknowledgments}
 This work has been supported (in part) by the Research Training Group ``Biostatistical Methods for High-Dimensional Data in Toxicology'' (RTG 2624, Project P1) funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation - Project Number 427806116).\\
 We would like to thank Nabarun Deb and Bodhisattva Sen for allowing us to use their \proglang{R} implementation of their test for the package. 
-Moreover, we would like to thank David Alvarez-Melis whose \proglang{Python} implementation of the OTDD was the basis for our \proglang{R} implementation.
+Moreover, we would like to thank David Alvarez-Melis, whose \proglang{Python} implementation of the OTDD was the basis for our \proglang{R} implementation.
 
 <<reset, echo=FALSE, results=hide>>=
 options(old)

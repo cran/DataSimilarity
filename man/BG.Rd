@@ -2,13 +2,13 @@
 \alias{BG}
 \encoding{UTF-8}
 \title{
-Biau and Gyorfi (2005) two-sample homogeneity test
+Biau and Gyorfi (2005) Two-sample Homogeneity Test
 }
 \description{
 The function implements the \cite{Biau and Gyorfi (2005)} two-sample homogeneity test. This test uses the \eqn{L_1}-distance between two empicial distribution functions restricted to a finite partition.
 }
 \usage{
-BG(X1, X2, partition = rectPartition, exponent = 0.8, eps = 0.01, seed = 42, ...)
+BG(X1, X2, partition = rectPartition, exponent = 0.8, eps = 0.01, seed = NULL, ...)
 }
 \arguments{
   \item{X1}{
@@ -27,7 +27,7 @@ Exponent used in the partition function, should be between 0 and 1 (default: 0.8
 Small threshold to guarantee edge points are included (default: 0.01)
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
   \item{...}{
 Further arguments to be passed to the partition function
@@ -67,6 +67,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{rectPartition}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

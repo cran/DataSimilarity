@@ -3,8 +3,10 @@
 ##                                                                            ##
 ################################################################################
 DiProPerm <- function(X1, X2, n.perm = 0, dipro.fun = dwdProj, stat.fun = MD, 
-                      direction = "two.sided", seed = 42) {
-  set.seed(seed)
+                      direction = "two.sided", seed = NULL) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   stopifnot(n.perm >= 0)
   dname <- c(deparse1(substitute(X1)), deparse1(substitute(X2)))
   if(!(inherits(X1, "matrix") | inherits(X1, "data.frame"))) {

@@ -9,7 +9,7 @@ Performs the random forest based two-sample test proposed by \cite{Hediger et al
 }
 \usage{
 HMN(X1, X2, n.perm = 0, statistic = "PerClassOOB", normal.approx = FALSE, 
-    seed = 42, ...)
+    seed = NULL, ...)
 }
 \arguments{
   \item{X1}{
@@ -28,7 +28,7 @@ Character specifying the test statistic. Possible options are \code{"PerClassOOB
 Should a normal approximation be used in the permutation test procedure? (default: \code{FALSE})
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
   \item{...}{
 Arguments passed to \code{\link[ranger]{ranger}}
@@ -72,6 +72,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link[ranger]{ranger}}, \code{\link{C2ST}}, \code{\link{YMRZL}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

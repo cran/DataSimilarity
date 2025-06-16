@@ -56,15 +56,15 @@ testNKTandGGRL <- function(n.iter) {
       P1.cond.no.tune <- DataSimilarity:::calcP(GCR.no.tune$parti1, X1, "conditional")
       P2.cond.no.tune <- DataSimilarity:::calcP(GCR.no.tune$parti2, X2, "conditional")
       
-      res.NKT.1.tune <- DataSimilarity::NKT(X1, X2, target1 = "y", target2 = "y", method = 1, n.eval = 3, k = 2, seed = i)
-      res.NKT.2.tune <- DataSimilarity::NKT(X1, X2, target1 = "y", target2 = "y", method = 2, n.eval = 3, k = 2, seed = i)
-      res.NKT.3.tune <- DataSimilarity::NKT(X1, X2, target1 = "y", target2 = "y", method = 3, n.eval = 3, k = 2, seed = i)
+      res.NKT.1.tune <- DataSimilarity::NKT(X1, X2, target1 = "y", target2 = "y", version = 1, n.eval = 3, k = 2, seed = i)
+      res.NKT.2.tune <- DataSimilarity::NKT(X1, X2, target1 = "y", target2 = "y", version = 2, n.eval = 3, k = 2, seed = i)
+      res.NKT.3.tune <- DataSimilarity::NKT(X1, X2, target1 = "y", target2 = "y", version = 3, n.eval = 3, k = 2, seed = i)
       
-      res.NKT.1.no.tune <- DataSimilarity::NKT(X1, X2, target1 = "y", target2 = "y", method = 1, 
+      res.NKT.1.no.tune <- DataSimilarity::NKT(X1, X2, target1 = "y", target2 = "y", version = 1, 
                                                tune = FALSE, seed = i)
-      res.NKT.2.no.tune <- DataSimilarity::NKT(X1, X2, target1 = "y", target2 = "y", method = 2, 
+      res.NKT.2.no.tune <- DataSimilarity::NKT(X1, X2, target1 = "y", target2 = "y", version = 2, 
                                                tune = FALSE, seed = i)
-      res.NKT.3.no.tune <- DataSimilarity::NKT(X1, X2, target1 = "y", target2 = "y", method = 3, 
+      res.NKT.3.no.tune <- DataSimilarity::NKT(X1, X2, target1 = "y", target2 = "y", version = 3, 
                                                tune = FALSE, seed = i)
       
       
@@ -208,22 +208,22 @@ testNKTandGGRL <- function(n.iter) {
         # check length and names of output
         testthat::expect_length(res.NKT.1.tune, 7)
         testthat::expect_named(res.NKT.1.tune, c("statistic", "p.value", "estimate", 
-                                                 "alternative", "method", "data.name", "method"))
+                                                 "alternative", "method", "data.name", "version"))
         testthat::expect_length(res.NKT.2.tune, 7)
         testthat::expect_named(res.NKT.2.tune, c("statistic", "p.value", "estimate", 
-                                                 "alternative", "method", "data.name", "method"))
+                                                 "alternative", "method", "data.name", "version"))
         testthat::expect_length(res.NKT.3.tune, 7)
         testthat::expect_named(res.NKT.3.tune, c("statistic", "p.value", "estimate", 
-                                                 "alternative", "method", "data.name", "method"))
+                                                 "alternative", "method", "data.name", "version"))
         testthat::expect_length(res.NKT.1.no.tune, 7)
         testthat::expect_named(res.NKT.1.no.tune, c("statistic", "p.value", "estimate", 
-                                                    "alternative", "method", "data.name", "method"))
+                                                    "alternative", "method", "data.name", "version"))
         testthat::expect_length(res.NKT.2.no.tune, 7)
         testthat::expect_named(res.NKT.2.no.tune, c("statistic", "p.value", "estimate", 
-                                                    "alternative", "method", "data.name", "method"))
+                                                    "alternative", "method", "data.name", "version"))
         testthat::expect_length(res.NKT.3.no.tune, 7)
         testthat::expect_named(res.NKT.3.no.tune, c("statistic", "p.value", "estimate", 
-                                                    "alternative", "method", "data.name", "method"))
+                                                    "alternative", "method", "data.name", "version"))
         # check approx.and perm p value is NA
         testthat::expect_true(is.null(res.NKT.1.tune$p.value))
         testthat::expect_true(is.null(res.NKT.1.tune$p.value))

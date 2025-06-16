@@ -4,11 +4,13 @@
 ################################################################################
 cramerWrapper <- function(X1, X2, dname, n.perm = 0, just.statistic = (n.perm <= 0), 
                           kernel = "phiCramer", sim = "ordinary", maxM = 2^14,
-                          K = 160, seed = 42) {
+                          K = 160, seed = NULL) {
   if(!requireNamespace("cramer", quietly = TRUE)) {
     stop("Package \"cramer\" required for using methods Cramer(), BF() and Bahr().")
   }
-  set.seed(seed)
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   stopifnot(n.perm > 0 || just.statistic)
   X1 <- as.matrix(X1)
   X2 <- as.matrix(X2)

@@ -9,7 +9,7 @@ Performs a two-sample test based on the maximum mean discrepancy (MMD) using eit
 }
 \usage{
 MMD(X1, X2, n.perm = 0, alpha = 0.05, asymptotic = FALSE, replace = TRUE, 
-    n.times = 150, frac = 1, seed = 42, ...)
+    n.times = 150, frac = 1, seed = NULL, ...)
 }
 \arguments{
   \item{X1}{
@@ -37,7 +37,7 @@ Number of repetitions for sampling procedure (default: 150)
 Fraction of points to sample (default: 1)
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
   \item{\dots}{
 Further arguments passed to \code{\link[kernlab]{kmmd}} specifying the kernel. E.g. \code{kernel} for passing the kernel as a character (default: \code{rbfdot} RBF kernel function) and \code{kpar} for passing the kernel parameter(s) as a named list (default: \code{"automatic"} uses heuristic for choosing a good bandwidth for the RBF or Laplace kernel). For details, see \code{\link[kernlab]{kmmd}}.
@@ -84,6 +84,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 }
 
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

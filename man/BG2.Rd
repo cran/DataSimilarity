@@ -8,7 +8,7 @@ Biswas and Ghosh (2014) Two-Sample Test
 Performs the \cite{Biswas and Ghosh (2014)} two-sample test for high-dimensional data. 
 }
 \usage{
-BG2(X1, X2, n.perm = 0, seed = 42)
+BG2(X1, X2, n.perm = 0, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -21,7 +21,7 @@ Second dataset as matrix or data.frame
 Number of permutations for permutation test (default: 0, asymptotic test is performed).
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -70,6 +70,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{Energy}}, \code{\link{Cramer}} 
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

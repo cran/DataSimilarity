@@ -8,7 +8,7 @@ Rosenbaum Crossmatch Test
 Performs the \cite{Rosenbaum (2005)} crossmatch two-sample test. The implementation here uses the \code{\link[crossmatch]{crossmatchtest}} implementation from the \pkg{crossmatch} package.
 }
 \usage{
-Rosenbaum(X1, X2, exact = FALSE, dist.fun = stats::dist, dist.args = NULL, seed = 42)
+Rosenbaum(X1, X2, exact = FALSE, dist.fun = stats::dist, dist.args = NULL, seed = NULL)
 }
 \arguments{
   \item{X1}{
@@ -27,7 +27,7 @@ Function for calculating a distance matrix on the pooled dataset (default: \code
 Named list of further arguments passed to \code{dist.fun} (default: \code{NULL}).
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
 }
 \details{
@@ -66,6 +66,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{Petrie}}, \code{\link{MMCM}} for multi-sample versions of the test
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)

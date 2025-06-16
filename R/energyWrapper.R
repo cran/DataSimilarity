@@ -2,8 +2,10 @@
 ##                                HELPER FUNCTIONS                            ##
 ##                                                                            ##
 ################################################################################
-energyWrapper <- function(data.list, n.perm = 0, dname, seed = 42) {
-  set.seed(seed)
+energyWrapper <- function(data.list, n.perm = 0, dname, seed = NULL) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   if(any(!sapply(data.list, function(x) inherits(x, "matrix") | inherits(x, "data.frame")))) {
     stop("All datasets must be provided as data.frames or matrices.")
   }
@@ -25,8 +27,10 @@ energyWrapper <- function(data.list, n.perm = 0, dname, seed = 42) {
   return(res)
 }
 
-discoWrapper <- function(data.list, n.perm = 0, method, dname, alpha, seed = 42) {
-  set.seed(seed)
+discoWrapper <- function(data.list, n.perm = 0, method, dname, alpha, seed = NULL) {
+  if(!is.null(seed)) {
+    set.seed(seed)
+  }
   if(any(!sapply(data.list, function(x) inherits(x, "matrix") | inherits(x, "data.frame")))) {
     stop("All datasets must be provided as data.frames or matrices.")
   }

@@ -8,8 +8,8 @@ Decision-Tree Based Measure of Dataset Similarity (\cite{Ntoutsi et al., 2008})
 Calculates Decision-Tree Based Measure of Dataset Similarity by \cite{Ntoutsi et al. (2008)}.
 }
 \usage{
-NKT(X1, X2, target1 = "y", target2 = "y", method = 1, tune = TRUE, k = 5, 
-      n.eval = 100, seed = 42, ...)
+NKT(X1, X2, target1 = "y", target2 = "y", version = 1, tune = TRUE, k = 5, 
+      n.eval = 100, seed = NULL, ...)
 }
 \arguments{
   \item{X1}{
@@ -24,8 +24,8 @@ Character specifying the column name of the class variable in the first dataset 
   \item{target2}{
 Character specifying the column name of the class variable in the second dataset (default: \code{"y"})
 }
-  \item{method}{
-Number in \code{1:3} specifying the method for calculating dataset similarity (default:1). See details.
+  \item{version}{
+Number in \code{1:3} specifying the version for calculating dataset similarity (default:1). See details.
 }
   \item{tune}{
 Should the decision tree parameters be tuned? (default: \code{TRUE})
@@ -37,7 +37,7 @@ Number of folds used in cross-validation for parameter tuning (default: 5). Igno
 Number of evaluations for random search used for parameter tuning (default: 100). Ignored if \code{tune = FALSE}.
 }
   \item{seed}{
-Random seed (default: 42)
+Random seed (default: NULL). A random seed will only be set if one is provided.
 }
   \item{\dots}{
 Further arguments passed to \code{\link[rpart:rpart]{rpart}}. Ignored if \code{tune = TRUE}.
@@ -83,6 +83,7 @@ Stolte, M., Kappenberg, F., Rahnenführer, J., Bommert, A. (2024). Methods for q
 \code{\link{GGRL}}
 }
 \examples{
+set.seed(1234)
 # Draw some data
 X1 <- matrix(rnorm(1000), ncol = 10)
 X2 <- matrix(rnorm(1000, mean = 0.5), ncol = 10)
@@ -92,9 +93,9 @@ X1 <- data.frame(X = X1, y = y1)
 X2 <- data.frame(X = X2, y = y2)
 if(requireNamespace("rpart", quietly = TRUE)) {
   # Calculate all three similarity measures (without tuning the trees due to runtime)
-  NKT(X1, X2, "y", method = 1, tune = FALSE)
-  NKT(X1, X2, "y", method = 2, tune = FALSE)
-  NKT(X1, X2, "y", method = 3, tune = FALSE)
+  NKT(X1, X2, "y", version = 1, tune = FALSE)
+  NKT(X1, X2, "y", version = 2, tune = FALSE)
+  NKT(X1, X2, "y", version = 3, tune = FALSE)
 }
 }
 \keyword{ htest }
